@@ -78,7 +78,7 @@ public class Chatroom extends Item {
         {
             return null;
         }
-        Chatroom created = (Chatroom)ChatroomBuilder.Build();
+        Chatroom created = (Chatroom)ChatroomBuilder.Get().Build();
         created.InitChatroom(name,password,owner);
         created.SetParametersValueInDatabase();
         return created;

@@ -223,7 +223,7 @@ public class SQLDatabaseChatroom implements DatabaseChatrooms {
             Connection con = SQLSelectedServer.getConnection();
             Statement stmt = con.createStatement();
 
-            Chatroom chatroom = (Chatroom)ChatroomBuilder.Build(-4);
+            Chatroom chatroom = (Chatroom)ChatroomBuilder.Get().Build(-4);
             String query = "SELECT items.id " +
                            "FROM items INNER JOIN itemsStringParams " +
                            "ON items.id=itemsStringParams.itemId " +
@@ -312,7 +312,7 @@ public class SQLDatabaseChatroom implements DatabaseChatrooms {
             Connection con = SQLSelectedServer.getConnection();
             Statement stmt = con.createStatement();
 
-            Chatroom chatroom = (Chatroom)ChatroomBuilder.Build(-4);
+            Chatroom chatroom = (Chatroom)ChatroomBuilder.Get().Build(-4);
             String query = "SELECT itemsStringParams.paramVal " +
                     "FROM items INNER JOIN itemsStringParams " +
                     "ON items.id=itemsStringParams.itemId " +

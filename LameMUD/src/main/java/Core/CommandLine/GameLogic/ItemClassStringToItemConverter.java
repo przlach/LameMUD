@@ -6,9 +6,9 @@ public class ItemClassStringToItemConverter {
 
     public static Item convert(String classString,int id)
     {
-        if(classString.equals(ChatroomBuilder.Build(-1).getItemClassString()))
+        if(classString.equals(ChatroomBuilder.Get().Build(-1).getItemClassString()))
         {
-            return ChatroomBuilder.Build(id);
+            return ChatroomBuilder.Get().Build(id);
         }
         else
         {

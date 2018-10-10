@@ -1,20 +1,24 @@
 package Core.CommandLine.GameLogic;
 
-public class ItemBuilder {
+abstract public class ItemBuilder {
 
-    public static Item Build()
+    public Item Build()
     {
-        return selectedBuilder.Build();
+        return selectedInternalBuilder.Build();
     }
-    public static Item Build(int id)
+    public Item Build(int id)
     {
-        return selectedBuilder.Build(id);
+        return selectedInternalBuilder.Build(id);
     }
-    public static void SetInternalBuilder(ItemBuilderInternal internalBuilder)
+    public void SetInternalBuilder(ItemBuilderInternal internalBuilder)
     {
-        selectedBuilder = internalBuilder;
+        selectedInternalBuilder = internalBuilder;
     }
 
-    private static ItemBuilderInternal selectedBuilder;
+    protected ItemBuilder()
+    {
 
+    }
+
+    private ItemBuilderInternal selectedInternalBuilder;
 }

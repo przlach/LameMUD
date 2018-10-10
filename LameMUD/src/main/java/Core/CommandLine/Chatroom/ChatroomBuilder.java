@@ -4,9 +4,20 @@ import Core.CommandLine.GameLogic.ItemBuilder;
 
 public class ChatroomBuilder extends ItemBuilder {
 
-    static
+    protected ChatroomBuilder()
     {
         SetInternalBuilder(new ChatroomBuilderInternal());
     }
+
+    public static ChatroomBuilder Get()
+    {
+        if(singleton == null)
+        {
+            singleton = new ChatroomBuilder();
+        }
+        return singleton;
+    }
+
+    private static ChatroomBuilder singleton;
 
 }
