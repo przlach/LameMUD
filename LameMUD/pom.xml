@@ -4,7 +4,7 @@
   <groupId>com.github.przlach</groupId>
   <artifactId>LameMUD</artifactId>
   <packaging>jar</packaging>
-  <version>0.1.2.1</version>
+  <version>0.1.2.2</version>
   <name>LameMUD</name>
   <description>Java MUD engine</description>
   <url>https://github.com/przlach/LameMUD</url>
