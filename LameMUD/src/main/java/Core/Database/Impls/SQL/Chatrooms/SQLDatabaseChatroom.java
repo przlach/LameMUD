@@ -267,6 +267,7 @@ public class SQLDatabaseChatroom implements DatabaseChatrooms {
             Connection con = SQLSelectedServer.getConnection();
             Statement stmt = con.createStatement();
 
+            Chatroom chatroom = (Chatroom)ChatroomBuilder.Get().Build(-4);
             String query = "SELECT paramVal FROM "+
                            "(SELECT id FROM " +
                              "(SELECT itemID FROM " +
@@ -275,7 +276,7 @@ public class SQLDatabaseChatroom implements DatabaseChatrooms {
                                  "WHERE paramName='hidden'AND paramVal='true') " +
                                "GROUP BY itemID) " +
                              "table1 " +
-                           "INNER JOIN (SELECT id FROM items WHERE className='chatroom') table2 ON table1.itemID=table2.id) " +
+                           "INNER JOIN (SELECT id FROM items WHERE className='"+chatroom.getItemClassString()+"') table2 ON table1.itemID=table2.id) " +
                          "visibleChatroomsIDs " +
                          "INNER join " +
                          "itemsStringParams " +
