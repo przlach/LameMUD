@@ -1,8 +1,8 @@
 package Core.CommandLine.Chatroom;
 
 import Core.CommandLine.GameLogic.Item;
-import Core.CommandLine.GameLogic.SmartDouble;
-import Core.CommandLine.GameLogic.SmartString;
+import Core.Params.SmartDouble;
+import Core.Params.SmartString;
 import Core.CommandLine.Messaging.MessageModifyExecutor;
 import Core.CommandLine.Messaging.MessageSender;
 import Core.CommandLine.User.User;

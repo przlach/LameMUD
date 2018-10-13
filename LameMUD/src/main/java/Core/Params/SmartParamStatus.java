@@ -1,4 +1,4 @@
-package Core.CommandLine.GameLogic;
+package Core.Params;
 
 public enum SmartParamStatus {
 

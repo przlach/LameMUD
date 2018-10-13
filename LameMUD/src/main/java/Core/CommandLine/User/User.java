@@ -1,15 +1,33 @@
 package Core.CommandLine.User;
 
 import Core.CommandLine.Chatroom.Chatroom;
+import Core.Database.API.DatabaseAPI;
+import Core.Database.API.Params.ItemParam;
+import Core.Params.SmartDouble;
+import Core.Params.SmartParamUpdaterInput;
+import Core.Params.SmartString;
 import Core.CommandLine.Messaging.MessageSender;
 import Core.Database.API.DatabaseHandler;
 import Core.Database.API.Params.StringParam;
 import Core.Database.API.Params.UserParam;
 
+import java.util.ArrayList;
+
 public class User {
 
     private final int id;
     private final String username;
+
+    public User(String username,String password)
+    {
+        DatabaseAPI database = DatabaseHandler.Get();
+        this.id = database.AddUser(username,password);
+        this.username = username;
+        smartParams = new SmartParamUpdaterInput(new ArrayList<SmartDouble>(),
+                new ArrayList<SmartString>(),
+                new UserParam(this));
+        RegisterSmartParameters();
+    }
 
     public User(int id, String username) {
         this.id = id;
@@ -149,4 +167,21 @@ public class User {
         result = 31 * result + username.hashCode();
         return result;
     }
+
+    protected void RegisterSmartParameters()
+    {
+        seeHiddenChannels = new SmartString("seeHiddenChannels","");
+        superUser = new SmartString("superUser","");
+        defaultChatroom = new SmartString("defaultChatroom","");
+
+        smartParams.trackSmartParameter(seeHiddenChannels);
+        smartParams.trackSmartParameter(superUser);
+        smartParams.trackSmartParameter(defaultChatroom);
+    }
+
+    protected SmartParamUpdaterInput smartParams;
+
+    private SmartString seeHiddenChannels;
+    private SmartString superUser;
+    private SmartString defaultChatroom;
 }
