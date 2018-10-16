@@ -3,11 +3,12 @@ package NotUnitTests;
 import Core.CommandLine.GameLogic.Item;
 import Core.CommandLine.Platforms.PlatformMessageHeader;
 import Core.CommandLine.User.User;
-import Core.CommandLine.User.UserBuilder;
 import Core.Config.MainConfig;
 import Core.Database.API.DatabaseAPI;
 import Core.Database.API.DatabaseHandler;
 import Core.Database.API.Params.*;
+import Core.Database.Impls.SQL.Connection.SQLServersCollection;
+import Core.Config.LocalTestServerParameters;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,8 +50,8 @@ public class DatabaseAPITests {
             assertTrue("Couldn't remove user from database", wasUserRemoved);
         }
 
-        User returnerUser = database.AddUser(userName, password);
-        assertNotNull("AddUser didn't return anything.", returnerUser);
+        int createdUserId = database.AddUser(userName, password);
+        assertTrue("AddUser failed.", createdUserId >= 0);
     }
 
     @Test
@@ -61,12 +62,12 @@ public class DatabaseAPITests {
         DatabaseAPI database = DatabaseHandler.Get();
 
         if (!database.IsUser(userName)) {
-            User createdUser = database.AddUser(userName, password);
-            assertNotNull("Adding user failed.", createdUser);
+            int createdUserId = database.AddUser(userName, password);
+            assertTrue("Adding user failed.", createdUserId >= 0);
         }
 
-        User sameUser = database.AddUser(userName, password);
-        assertNull("AddUser() allowed to create user with the same nickname.", sameUser);
+        int sameUserId = database.AddUser(userName, password);
+        assertTrue("AddUser() allowed to create user with the same nickname.", sameUserId == -1);
 
     }
 
@@ -78,12 +79,12 @@ public class DatabaseAPITests {
         DatabaseAPI database = DatabaseHandler.Get();
 
         if (!database.IsUser(userName)) {
-            User createdUser = database.AddUser(userName, password);
-            assertNotNull("Adding user failed.", createdUser);
+            int createdUserId = database.AddUser(userName, password);
+            assertTrue("Adding user failed.", createdUserId >= 0);
         }
 
-        User gettedUser = database.GetUser(userName);
-        assertNotNull("GetUser() returned nothing.", gettedUser);
+        int gettedUserId = database.GetUserID(userName);
+        assertTrue("GetUser() returned nothing.", gettedUserId >= 0);
 
     }
 
@@ -99,14 +100,14 @@ public class DatabaseAPITests {
             assertTrue("Couldn't remove user from database", wasUserRemoved);
         }
 
-        User createdUser = database.AddUser(userName, password);
-        assertNotNull("Adding user failed.", createdUser);
+        int createdUserId = database.AddUser(userName, password);
+        assertTrue("Adding user failed.", createdUserId >= 0);
 
-        User gettedUser = database.GetUser(userName);
-        assertNotNull("GetUser() returned nothing.", gettedUser);
+        int gettedUserId = database.GetUserID(userName);
+        assertTrue("GetUser() returned not allowed userId.", gettedUserId >= 0);
 
         assertEquals("id gotten by GetUser() is different then the one returned by AddUser()",
-                gettedUser.getId(), createdUser.getId());
+                gettedUserId, createdUserId);
     }
 
     @Test
@@ -120,8 +121,8 @@ public class DatabaseAPITests {
             assertTrue("Couldn't remove user from database", wasUserRemoved);
         }
 
-        User gettedUser = database.GetUser(userName);
-        assertNull("GetUser() returned user, when it doesn't exist.", gettedUser);
+        int gettedUserId = database.GetUserID(userName);
+        assertTrue("GetUser() returned proper userId, when it doesn't exist.", gettedUserId == -1);
     }
 
     @Test
@@ -158,8 +159,8 @@ public class DatabaseAPITests {
         DatabaseAPI database = DatabaseHandler.Get();
 
         if (!database.IsUser(userName)) {
-            User createdUser = database.AddUser(userName, password);
-            assertNotNull("Adding user failed.", createdUser);
+            int createdUserId = database.AddUser(userName, password);
+            assertTrue("Adding user failed.", createdUserId >= 0);
         }
 
         boolean wasUserRemoved = database.RemoveUser(userName);
@@ -278,16 +279,15 @@ public class DatabaseAPITests {
 
         String userName = "testNickname";
         String password = "testPassword";
-        User testUser = database.GetUser(userName);
+        int testUserId = database.GetUserID(userName);
 
-        if (testUser == null) {
-            testUser = database.AddUser(userName, password);
-            assertNotNull("Couldn't create user", testUser);
+        if (testUserId < 0) {
+            int createdUserId = database.AddUser(userName, password);
+            assertTrue("Adding user failed.", createdUserId >= 0);
         }
 
-        User authenticadedUser = database.AuthenticateUser(userName, password);
-        assertNotNull("User returned with AuthenticateUser(...) is null");
-        assertTrue("AuthenticateUser() didn't returned the exact same user as expected", authenticadedUser.equals(testUser));
+        boolean authenticationResult = database.AuthenticateUser(userName, password);
+        assertTrue("AuthenticateUser() returned false", authenticationResult);
     }
 
     @Test
@@ -298,15 +298,15 @@ public class DatabaseAPITests {
         String userName = "testNickname";
         String password = "testPassword";
         String wrongPassword = "wrongPwd";
-        User testUser = database.GetUser(userName);
+        int testUserId = database.GetUserID(userName);
 
-        if (testUser == null) {
-            testUser = database.AddUser(userName, password);
-            assertNotNull("Couldn't create user", testUser);
+        if (testUserId < 0) {
+            int createdUserId = database.AddUser(userName, password);
+            assertTrue("Adding user failed.", createdUserId >= 0);
         }
 
-        User authenticadedUser = database.AuthenticateUser(userName, wrongPassword);
-        assertNull("AuthenticateUser() returned user, even when wrong password was given", authenticadedUser);
+        boolean authenticationResult = database.AuthenticateUser(userName, wrongPassword);
+        assertFalse("AuthenticateUser() returned true, even when wrong password was given", authenticationResult);
     }
 
     @Test
@@ -316,15 +316,15 @@ public class DatabaseAPITests {
 
         String userName = "testNickname";
         String password = "testPassword";
-        User testUser = database.GetUser(userName);
+        int testUserId = database.GetUserID(userName);
 
-        if (testUser != null) {
+        if (testUserId >= 0) {
             boolean removeUserResult = database.RemoveUser(userName);
             assertTrue("Couldn't remove user", removeUserResult);
         }
 
-        User authenticadedUser = database.AuthenticateUser(userName, password);
-        assertNull("AuthenticateUser() returned not null, even when user isn't existing", authenticadedUser);
+        boolean authenticationResult = database.AuthenticateUser(userName, password);
+        assertFalse("AuthenticateUser() returned true, even when user isn't existing", authenticationResult);
 
     }
 
@@ -335,11 +335,11 @@ public class DatabaseAPITests {
 
         String userName = "testNickname";
         String password = "testPassword";
-        User testUser = database.GetUser(userName);
+        int testUserId = database.GetUserID(userName);
 
-        if (testUser == null) {
-            testUser = database.AddUser(userName, password);
-            assertNotNull("Couldn't create user", testUser);
+        if (testUserId < 0) {
+            int createdUserId = database.AddUser(userName, password);
+            assertTrue("Adding user failed.", createdUserId >= 0);
         }
 
         StubPlatformMessageHeader testedHeader = new StubPlatformMessageHeader();
@@ -348,9 +348,8 @@ public class DatabaseAPITests {
         boolean addTrustedPlatformResult = database.AddTrustedPlatformToUser(testedHeader, userName);
         assertTrue("Couldn't add trusted platform", addTrustedPlatformResult);
 
-        User authenticadedUser = database.AuthenticateUser(userName, testedHeader);
-        assertNotNull("User returned with AuthenticateUser(...) is null", authenticadedUser);
-        assertTrue("AuthenticateUser() didn't returned the exact same user as expected", authenticadedUser.equals(testUser));
+        boolean authenticationResult = database.AuthenticateUser(userName, testedHeader);
+        assertTrue("AuthenticateUser() didn't returned succeded", authenticationResult);
     }
 
     @Test
@@ -360,19 +359,19 @@ public class DatabaseAPITests {
 
         String userName = "testNickname";
         String password = "testPassword";
-        User testUser = database.GetUser(userName);
+        int testUserId = database.GetUserID(userName);
 
-        if (testUser == null) {
-            testUser = database.AddUser(userName, password);
-            assertNotNull("Couldn't create user", testUser);
+        if (testUserId < 0) {
+            int createdUserId = database.AddUser(userName, password);
+            assertTrue("Adding user failed.", createdUserId >= 0);
         }
 
         StubPlatformMessageHeader testedHeader = new StubPlatformMessageHeader();
         testedHeader.SetUserIdentifier("testID");
         database.RemoveTrustedPlatformFromUser(testedHeader, userName);
 
-        User authenticadedUser = database.AuthenticateUser(userName, testedHeader);
-        assertNull("User returned with AuthenticateUser(...) is not null, even if selected header isn't the trusted one", authenticadedUser);
+        boolean authenticationResult = database.AuthenticateUser(userName, testedHeader);
+        assertFalse("AuthenticateUser(...) didn't failed, even if selected header isn't the trusted one", authenticationResult);
     }
 
     @Test
@@ -382,11 +381,11 @@ public class DatabaseAPITests {
 
         String userName = "testNickname";
         String password = "testPassword";
-        User testUser = database.GetUser(userName);
+        int testUserId = database.GetUserID(userName);
 
-        if (testUser == null) {
-            testUser = database.AddUser(userName, password);
-            assertNotNull("Couldn't create user", testUser);
+        if (testUserId < 0) {
+            int createdUserId = database.AddUser(userName, password);
+            assertTrue("Adding user failed.", createdUserId >= 0);
         }
 
         StubPlatformMessageHeader testedHeader = new StubPlatformMessageHeader();
@@ -396,8 +395,8 @@ public class DatabaseAPITests {
         assertTrue("Couldn't add trusted platform", addTrustedPlatformResult);
 
         testedHeader.setTrustedLogin(false);
-        User authenticadedUser = database.AuthenticateUser(userName, testedHeader);
-        assertNull("User was returned with AuthenticateUser(...), when header trusted login was set to false.", authenticadedUser);
+        boolean authenticationResult = database.AuthenticateUser(userName, testedHeader);
+        assertFalse("AuthenticateUser(...) returned false, when header trusted login was set to false.", authenticationResult);
     }
 
     @Test
@@ -635,29 +634,33 @@ public class DatabaseAPITests {
 
     private void InitDatabase() {
         MainConfig.SetConfig();
+        SQLServersCollection.addServer(new LocalTestServerParameters());
 
         testItem = new TestItem(6);
         testedItemOwner = new ItemParam(testItem);
+        User.Create(testUserUsername,testUserPassword);
+        testUser = User.Get(testUserUsername);
+        testedUserOwner = new UserParam(testUser);
     }
 
-    private User CreateTestUser() {
-        User testUser;
+    private int CreateTestUser() {
+        int testUserId;
         DatabaseAPI database = DatabaseHandler.Get();
 
-        testUser = database.GetUser(testUserUsername);
-        if (testUser == null) {
-            testUser = database.AddUser(testUserUsername, testUserPassword);
-            assertNotNull("Adding user failed.", testUser);
+        testUserId = database.GetUserID(testUserUsername);
+        if (testUserId < 0) {
+            testUserId = database.AddUser(testUserUsername, testUserPassword);
+            assertTrue("Adding user failed.", testUserId >= 0);
         }
-        return testUser;
+        return testUserId;
     }
 
     private void RemoveTestUser() {
-        User testUser;
+        int testUserId;
         DatabaseAPI database = DatabaseHandler.Get();
 
-        testUser = database.GetUser(testUserUsername);
-        if (testUser != null) {
+        testUserId = database.GetUserID(testUserUsername);
+        if (testUserId >= 0) {
             boolean removeUserResult = database.RemoveUser(testUserUsername);
             assertTrue("Removing user failed.", removeUserResult);
         }
@@ -767,9 +770,9 @@ public class DatabaseAPITests {
     private final String testUserUsername = "testNickname";
     private final String testUserPassword = "testPassword";
 
-    private final User testUser = UserBuilder.ObsoleteBuild(4,"testUser");
+    private User testUser;
     private final String testStringParamValue = "testStringParamValue";
-    private final UserParam testedUserOwner = new UserParam(testUser);
+    private UserParam testedUserOwner;
     private final StringParam testedStringParam = new StringParam("testStringParamName",testStringParamValue);
 
     private Item testItem;

@@ -120,7 +120,7 @@ class SQLPlatforms {
     static boolean AddTrustedPlatformToUser(PlatformMessageHeader header, String username)
     {
         DatabaseAPI database = DatabaseHandler.Get();
-        User user = database.GetUser(username);
+        User user = User.Get(username);
 
         if(user == null)
         {
@@ -179,7 +179,7 @@ class SQLPlatforms {
     static boolean RemoveTrustedPlatformFromUser(PlatformMessageHeader header, String username)
     {
         DatabaseAPI database = DatabaseHandler.Get();
-        User user = database.GetUser(username);
+        User user = User.Get(username);
 
         if(user == null)
         {
@@ -219,7 +219,7 @@ class SQLPlatforms {
     static boolean UserHaveThisTrustedPlatform(PlatformMessageHeader header, String username)
     {
         DatabaseAPI database = DatabaseHandler.Get();
-        User user = database.GetUser(username);
+        User user = User.Get(username);
 
         if(user == null)
         {

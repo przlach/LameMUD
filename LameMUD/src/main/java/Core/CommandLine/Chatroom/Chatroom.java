@@ -133,7 +133,7 @@ public class Chatroom extends Item {
         formattedMessage += " " + transformedMessage;
         for(int userID: usersInChatroom)
         {
-            MessageSender.SystemMessageToUser(UserBuilder.ObsoleteBuild(userID,""),formattedMessage);    // TODO very temp, is creating user here ok???
+            MessageSender.SystemMessageToUser(User.Get(userID),formattedMessage);
         }
     }
     public void SendMessage(String message)
@@ -149,7 +149,7 @@ public class Chatroom extends Item {
 
         for(int usrID: chatroomUsrsIds)
         {
-            RemoveUser(UserBuilder.ObsoleteBuild(usrID,"Chatroom:RemoveEveryUser() internat incomplete user"));  // not correct usage of creating incomplete user
+            RemoveUser(User.Get(usrID));
         }
 
     }

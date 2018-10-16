@@ -2,6 +2,8 @@ package Extensions.Platforms.LocalExecutionPlatform.GUI;
 
 import Core.CommandLine.MainInterpreter;
 import Core.CommandLine.Platforms.PlatformMessage;
+import Core.Database.Impls.SQL.Connection.SQLServersCollection;
+import Core.Config.LocalTestServerParameters;
 import Extensions.Platforms.LocalExecutionPlatformHeader;
 
 import javax.swing.*;
@@ -66,6 +68,8 @@ public class LocalClient {
         {
             n = Integer.parseInt(args[0]);
         }
+
+        SQLServersCollection.addServer(new LocalTestServerParameters());
 
         CreateClients(n);
 
