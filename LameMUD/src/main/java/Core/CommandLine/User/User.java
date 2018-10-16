@@ -112,51 +112,17 @@ public class User {
 
     public boolean CanSeeHiddenChannels()
     {
-        String paramResult = (String)DatabaseHandler.Get().GetParam(new UserParam(this),new StringParam("seeHiddenChannels","sendVal"));
-        if(paramResult == null)
-        {
-            return false;
-        }
-        else if(paramResult.equals("sendVal"))
-        {
-            try {
-                throw new Exception("GetParam() returned value set in param constructor");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        else if(paramResult.equals("true"))
-        {
-            return true;
-        }
-        return false;
+        return seeHiddenChannels.GetBoolean();
     }
 
     public boolean IsSuperUser()
     {
-        String paramResult = (String)DatabaseHandler.Get().GetParam(new UserParam(this),new StringParam("superUser","sendVal3"));
-        if(paramResult == null)
-        {
-            return false;
-        }
-        else if(paramResult.equals("sendVal3"))
-        {
-            try {
-                throw new Exception("IsBabbling() returned value set in param constructor");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        else if(paramResult.equals("true"))
-        {
-            return true;
-        }
-        return false;
+        return superUser.GetBoolean();
     }
 
     public Chatroom GetDefaultChatroom()
     {
-        String defaultChatroomName = (String)DatabaseHandler.Get().GetParam(new UserParam(this),new StringParam("defaultChatroom","sendVal"));
+        String defaultChatroomName = defaultChatroom.GetValue();
         Chatroom defaultChatroom = Chatroom.GetFromDatabase(defaultChatroomName);
         return defaultChatroom;
     }
@@ -175,20 +141,20 @@ public class User {
             return false;
         }
 
-        boolean setParamResult = DatabaseHandler.Get().SetParam(new UserParam(this),new StringParam("defaultChatroom",chatroomName));
+        defaultChatroom.SetValue(chatroomName);
 
-        if(setParamResult)
+        if(defaultChatroom.SetValueInDatabase(smartParams.getOwner()))
         {
             MessageSender.SystemMessageToUser(this,chatroomName+" set as default chatroom.");
+            return true;
         }
 
-        return setParamResult;
+        return false;
     }
 
     public boolean RemoveDefaultChatroom()
     {
-        boolean removeResult = DatabaseHandler.Get().RemoveParam(new UserParam(this),new StringParam("defaultChatroom","sendVal"));
-        return removeResult;
+        return defaultChatroom.RemoveValueFromDatabase(smartParams.getOwner());
     }
 
     public boolean AutoSetDefaultChatroomAfterLeavingChatroom(String leavedChatroomName)
