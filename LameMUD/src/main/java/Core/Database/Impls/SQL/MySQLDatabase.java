@@ -20,8 +20,8 @@ import java.sql.Statement;
 
 public class MySQLDatabase implements DatabaseAPI {
     @Override
-    public User AuthenticateUser(String username, String password) {
-        User result = null;
+    public boolean AuthenticateUser(String username, String password) {
+        boolean result = false;
         try {
 
             String hashedPwd = MySQLCommon.HashPassword(password);
@@ -37,7 +37,7 @@ public class MySQLDatabase implements DatabaseAPI {
             }
             else
             {
-                result = UserBuilder.ObsoleteBuild(uprs.getInt("id"),uprs.getString("nickname"));
+                result = true;
             }
 
             if(uprs.next())
@@ -56,37 +56,36 @@ public class MySQLDatabase implements DatabaseAPI {
         } catch (SQLException e) {
             Logger.Log(e.getMessage(),
                     "error","SQL");
-            return null;
+            return false;
         }
     }
 
     @Override
-    public User AuthenticateUser(String username, PlatformMessageHeader header) {
+    public boolean AuthenticateUser(String username, PlatformMessageHeader header) {
 
         if(!header.AllowTrustedLogin())
         {
-            return null;
+            return false;
         }
         boolean isHeaderAuthenticated = SQLPlatforms.UserHaveThisTrustedPlatform(header,username);
         if(isHeaderAuthenticated)
         {
-            return GetUser(username);
+            return true;
         }
         else
         {
-            return null;
+            return false;
         }
     }
 
     @Override
-    public User AddUser(String username, String password) {
+    public int AddUser(String username, String password) {
 
         if(IsUser(username))
         {
-            return null;
+            return -1;
         }
 
-        User result = null;
         try {
 
             Connection con = SQLSelectedServer.getConnection();
@@ -104,13 +103,13 @@ public class MySQLDatabase implements DatabaseAPI {
             stmt.close();
             con.close();
 
-            return GetUser(username);
+            return GetUserID(username);
 
 
         } catch (SQLException e) {
             Logger.Log(e.getMessage(),
                     "error","SQL");
-            return null;
+            return -2;
         }
 
     }
@@ -145,9 +144,9 @@ public class MySQLDatabase implements DatabaseAPI {
     }
 
     @Override
-    public User GetUser(String username) {
+    public int GetUserID(String username) {
 
-        User result = null;
+        int result = -1;
         try {
 
             Connection con = SQLSelectedServer.getConnection();
@@ -161,7 +160,7 @@ public class MySQLDatabase implements DatabaseAPI {
             }
             else
             {
-                result = UserBuilder.ObsoleteBuild(uprs.getInt("id"),uprs.getString("nickname"));
+                result = uprs.getInt("id");
             }
 
             if(uprs.next())
@@ -180,9 +179,48 @@ public class MySQLDatabase implements DatabaseAPI {
         } catch (SQLException e) {
             Logger.Log(e.getMessage(),
                     "error","SQL");
-            return null;
+            return -2;
         }
 
+    }
+
+    @Override
+    public String GetUsername(int id) {
+        String result = null;
+        try {
+
+            Connection con = SQLSelectedServer.getConnection();
+            Statement stmt = con.createStatement();
+            ResultSet uprs = stmt.executeQuery("SELECT * FROM usrs WHERE id=" + id + ";");
+
+            if(! uprs.next())
+            {
+                Logger.Log("No user found in database with id: " + id,
+                        "SQL");
+            }
+            else
+            {
+                result = uprs.getString("nickname");
+            }
+
+            if(uprs.next())
+            {
+                Logger.Log("There are more than one user in database with id: " + id,
+                        "error","SQL");
+            }
+
+            uprs.close();
+            stmt.close();
+            con.close();
+
+            return result;
+
+
+        } catch (SQLException e) {
+            Logger.Log(e.getMessage(),
+                    "error","SQL");
+            return null;
+        }
     }
 
     @Override

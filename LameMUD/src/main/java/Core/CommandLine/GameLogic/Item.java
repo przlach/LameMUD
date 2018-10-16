@@ -3,6 +3,10 @@ package Core.CommandLine.GameLogic;
 import Core.Database.API.DatabaseAPI;
 import Core.Database.API.DatabaseHandler;
 import Core.Database.API.Params.ItemParam;
+import Core.Params.SmartDouble;
+import Core.Params.SmartParamUpdater;
+import Core.Params.SmartParamUpdaterInput;
+import Core.Params.SmartString;
 
 import java.util.ArrayList;
 
@@ -12,7 +16,9 @@ public abstract class Item {
     {
         DatabaseAPI database = DatabaseHandler.Get();
         this.id = database.AddItem(getItemClassString());
-        thisParam = new ItemParam(this);
+        smartParams = new SmartParamUpdaterInput(new ArrayList<SmartDouble>(),
+                                                 new ArrayList<SmartString>(),
+                                                 new ItemParam(this));
         RegisterSmartParameters();
     }
 
@@ -23,7 +29,9 @@ public abstract class Item {
         {
             return;
         }
-        thisParam = new ItemParam(this);
+        smartParams = new SmartParamUpdaterInput(new ArrayList<SmartDouble>(),
+                                                 new ArrayList<SmartString>(),
+                                                 new ItemParam(this));
         RegisterSmartParameters();
         GetParametersValuesFromDatabase();
     }
@@ -52,82 +60,37 @@ public abstract class Item {
 
     public void GetParametersValuesFromDatabase()
     {
-        for (SmartDouble smartDouble:trackedSmartDoubles)
-        {
-            smartDouble.GetValueFromDatabase(thisParam);
-        }
-        for (SmartString smartString:trackedSmartStrings)
-        {
-            smartString.GetValueFromDatabase(thisParam);
-        }
+        SmartParamUpdater.GetParametersValuesFromDatabase(smartParams);
     }
 
     public void SetParametersValueInDatabase()
     {
-        for (SmartDouble smartDouble:trackedSmartDoubles)
-        {
-            smartDouble.SetValueInDatabase(thisParam);
-        }
-        for (SmartString smartString:trackedSmartStrings)
-        {
-            smartString.SetValueInDatabase(thisParam);
-        }
+        SmartParamUpdater.SetParametersValueInDatabase(smartParams);
     }
 
     public void RemoveParametersFromDatabase()
     {
-        for (SmartDouble smartDouble:trackedSmartDoubles)
-        {
-            smartDouble.RemoveValueFromDatabase(thisParam);
-        }
-        for (SmartString smartString:trackedSmartStrings)
-        {
-            smartString.RemoveValueFromDatabase(thisParam);
-        }
+        SmartParamUpdater.RemoveParametersFromDatabase(smartParams);
     }
 
     protected boolean trackSmartParameter(SmartDouble param)
     {
-        if(containsSameSmartParam(param))
-        {
-            return false;
-        }
-        trackedSmartDoubles.add(param);
-        return true;
+        return smartParams.trackSmartParameter(param);
     }
 
     private boolean containsSameSmartParam(SmartDouble param)
     {
-        for (SmartDouble smartDouble: trackedSmartDoubles) {
-
-            if(smartDouble.GetParamName().equals(param.GetParamName()))
-            {
-                return true;
-            }
-        }
-        return false;
+        return smartParams.containsSameSmartParam(param);
     }
 
     protected boolean trackSmartParameter(SmartString param)
     {
-        if(containsSameSmartParam(param))
-        {
-            return false;
-        }
-        trackedSmartStrings.add(param);
-        return true;
+        return smartParams.trackSmartParameter(param);
     }
 
     private boolean containsSameSmartParam(SmartString param)
     {
-        for (SmartString smartString: trackedSmartStrings) {
-
-            if(smartString.GetParamName().equals(param.GetParamName()))
-            {
-                return true;
-            }
-        }
-        return false;
+        return smartParams.containsSameSmartParam(param);
     }
 
     public boolean Remove()
@@ -135,8 +98,7 @@ public abstract class Item {
         PreRemove();
 
         RemoveParametersFromDatabase();
-        trackedSmartDoubles = null;
-        trackedSmartStrings = null;
+        smartParams = null;
         DatabaseHandler.Get().RemoveItem(this);
 
         AfterRemove();
@@ -158,9 +120,7 @@ public abstract class Item {
         return id;
     }
 
-    private ItemParam thisParam;
     protected final int id;
-    private ArrayList<SmartDouble> trackedSmartDoubles = new ArrayList<SmartDouble>();
-    private ArrayList<SmartString> trackedSmartStrings = new ArrayList<SmartString>();
+    private SmartParamUpdaterInput smartParams;
 
 }

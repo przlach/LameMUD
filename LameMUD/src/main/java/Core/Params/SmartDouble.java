@@ -1,30 +1,30 @@
-package Core.CommandLine.GameLogic;
+package Core.Params;
 
 import Core.Database.API.DatabaseAPI;
 import Core.Database.API.DatabaseHandler;
+import Core.Database.API.Params.DoubleParam;
 import Core.Database.API.Params.ParamOwner;
-import Core.Database.API.Params.StringParam;
 
-import static Core.CommandLine.GameLogic.SmartParamStatus.actual;
+import static Core.Params.SmartParamStatus.actual;
 
-public class SmartString {
+public class SmartDouble {
 
-    private StringParam content;
+    private DoubleParam content;
     private SmartParamStatus status;
 
-    public SmartString(String paramName)
+    public SmartDouble(String paramName)
     {
-        content = new StringParam(paramName,"");
+        content = new DoubleParam(paramName,0);
         status = SmartParamStatus.valueNotSet;
     }
 
-    public SmartString(String paramName, String paramVal)
+    public SmartDouble(String paramName, double paramVal)
     {
-        content = new StringParam(paramName,paramVal);
+        content = new DoubleParam(paramName,paramVal);
         status = SmartParamStatus.notSendedToDatabase;
     }
 
-    public void SetValue(String newVal)
+    public void SetValue(double newVal)
     {
         switch (status)
         {
@@ -41,27 +41,9 @@ public class SmartString {
         content.setParamValue(newVal);
     }
 
-    public void SetValue(boolean newVal)
-    {
-        String newStringVal;
-        if(newVal)
-        {
-            newStringVal = "true";
-        }
-        else
-        {
-            newStringVal = "false";
-        }
-        SetValue(newStringVal);
-    }
-
-    public String GetValue()
+    public double GetValue()
     {
         return content.getParamValue();
-    }
-
-    public boolean GetBoolean() {
-        return content.getParamValue().equals("true");
     }
 
     public boolean SetValueInDatabase(ParamOwner owner)
@@ -86,7 +68,7 @@ public class SmartString {
                 return false;
         }
         DatabaseAPI database = DatabaseHandler.Get();
-        String getResult = (String)database.GetParam(owner,content);
+        double getResult = (Double)database.GetParam(owner,content);
         content.setParamValue(getResult);
         status = actual;
         return true;

@@ -2,17 +2,9 @@ package Core.CommandLine.User;
 
 public class UserBuilder {
 
-    public static User Build()
+    public static User Build(int id, String username)
     {
-        return selectedBuilder.Build();
-    }
-    public static User Build(int id)
-    {
-        return selectedBuilder.Build(id);
-    }
-    public static User ObsoleteBuild(int id, String username)
-    {
-        return selectedBuilder.ObsoleteBuild(id,username);
+        return selectedBuilder.Build(id,username);
     }
     public static void SetInternalBuilder(UserBuilderInternal internalBuilder)
     {

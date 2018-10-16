@@ -2,18 +2,18 @@ package Core.Database.API;
 
 import Core.CommandLine.GameLogic.Item;
 import Core.CommandLine.Platforms.PlatformMessageHeader;
-import Core.CommandLine.User.User;
 import Core.Database.API.Params.Param;
 import Core.Database.API.Params.ParamOwner;
 
 public interface DatabaseAPI {
 
-    public User AuthenticateUser(String username, String password);
-    public User AuthenticateUser(String username, PlatformMessageHeader header);
+    public boolean AuthenticateUser(String username, String password);
+    public boolean AuthenticateUser(String username, PlatformMessageHeader header);
 
-    public User AddUser(String username, String password);
+    public int AddUser(String username, String password);
     public boolean RemoveUser(String username);
-    public User GetUser(String username);
+    public int GetUserID(String username);
+    public String GetUsername(int id);
     public boolean IsUser(String username);
 
     public int AddItem(String classString);

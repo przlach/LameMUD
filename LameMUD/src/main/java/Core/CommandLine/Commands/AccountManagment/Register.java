@@ -36,8 +36,7 @@ public class Register extends Command{
 
         String commandResponse;
 
-        DatabaseAPI database = DatabaseHandler.Get();
-        User registeredUser = database.AddUser(login,password);
+        User registeredUser = User.Create(login,password);
 
         if(registeredUser != null)
         {

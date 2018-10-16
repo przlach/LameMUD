@@ -87,7 +87,7 @@ public class ActiveUsers {
 
         DatabaseAPI database = DatabaseHandler.Get();
         User verifyResult;
-        verifyResult = database.AuthenticateUser(username,authPassword);
+        verifyResult = User.AuthenticateUser(username,authPassword);
 
         if(verifyResult != null)
         {
@@ -131,7 +131,7 @@ public class ActiveUsers {
         }
         else
         {
-            verifyResult = database.AuthenticateUser(username, header);
+            verifyResult = User.AuthenticateUser(username, header);
         }
 
 
