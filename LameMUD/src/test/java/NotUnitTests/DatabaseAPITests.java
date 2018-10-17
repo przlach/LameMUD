@@ -1,6 +1,6 @@
 package NotUnitTests;
 
-import Core.CommandLine.GameLogic.Item;
+import Core.Params.SmartObject.SmartObject;
 import Core.CommandLine.Platforms.PlatformMessageHeader;
 import Core.CommandLine.User.User;
 import Core.Config.MainConfig;
@@ -184,92 +184,92 @@ public class DatabaseAPITests {
     }
 
     @Test
-    public void testAddItem() {
+    public void testAddSmartObject() {
 
-        String itemClass = "testClass";
+        String smartObjectClass = "testClass";
         DatabaseAPI database = DatabaseHandler.Get();
 
-        int createdItemID = database.AddItem(itemClass);
-        assertTrue("AddItem() returned invalid itemID", createdItemID >= 0);
+        int createdSmartObjectID = database.AddSmartObject(smartObjectClass);
+        assertTrue("AddSmartObject() returned invalid smartObjectID", createdSmartObjectID >= 0);
     }
 
     @Test
-    public void testGetItemClassString() {
+    public void testGetSmartObjectClassString() {
 
-        String itemClass = "testClass";
+        String smartObjectClass = "testClass";
         DatabaseAPI database = DatabaseHandler.Get();
 
-        int createdItemID = database.AddItem(itemClass);
-        assertTrue("Couldn't create item.", createdItemID >= 0);
+        int createdSmartObjectID = database.AddSmartObject(smartObjectClass);
+        assertTrue("Couldn't create smartObject.", createdSmartObjectID >= 0);
 
-        String gettedItemClassString = database.GetItemClassString(createdItemID);
-        assertNotNull("GetGetItemClassString() returned null.", gettedItemClassString);
-        assertEquals("Getted item class string doesn't match the requested one.", itemClass, gettedItemClassString);
+        String gettedSmartObjectClassString = database.GetSmartObjectClassString(createdSmartObjectID);
+        assertNotNull("GetGetSmartObjectClassString() returned null.", gettedSmartObjectClassString);
+        assertEquals("Getted smartObject class string doesn't match the requested one.", smartObjectClass, gettedSmartObjectClassString);
     }
 
     @Test
-    public void testGetNonExistingItemClassString() {
+    public void testGetNonExistingSmartObjectClassString() {
 
-        String itemClass = "testClass";
+        String smartObjectClass = "testClass";
         DatabaseAPI database = DatabaseHandler.Get();
 
-        int createdItemID = database.AddItem(itemClass);
-        assertTrue("Couldn't create item.", createdItemID >= 0);
+        int createdSmartObjectID = database.AddSmartObject(smartObjectClass);
+        assertTrue("Couldn't create smartObject.", createdSmartObjectID >= 0);
 
-        String gettedItemClassString = database.GetItemClassString(createdItemID + 1);
-        assertNull("GetItem() returned not null.", gettedItemClassString);
+        String gettedSmartObjectClassString = database.GetSmartObjectClassString(createdSmartObjectID + 1);
+        assertNull("GetSmartObject() returned not null.", gettedSmartObjectClassString);
     }
 
     @Test
-    public void testIsItem() {
+    public void testIsSmartObject() {
 
-        String itemClass = "testClass";
+        String smartObjectClass = "testClass";
         DatabaseAPI database = DatabaseHandler.Get();
 
-        int createdItemID = database.AddItem(itemClass);
-        assertTrue("Couldn't create item.", createdItemID >= 0);
+        int createdSmartObjectID = database.AddSmartObject(smartObjectClass);
+        assertTrue("Couldn't create smartObject.", createdSmartObjectID >= 0);
 
-        boolean doesItemExist = database.IsItem(createdItemID);
-        assertTrue("IsItem() returned false.", doesItemExist);
+        boolean doesSmartObjectExist = database.IsSmartObject(createdSmartObjectID);
+        assertTrue("IsSmartObject() returned false.", doesSmartObjectExist);
     }
 
     @Test
-    public void testIsNonExistingItem() {
+    public void testIsNonExistingSmartObject() {
 
-        String itemClass = "testClass";
+        String smartObjectClass = "testClass";
         DatabaseAPI database = DatabaseHandler.Get();
 
-        int createdItemID = database.AddItem(itemClass);
-        assertTrue("Couldn't create item.", createdItemID >= 0);
+        int createdSmartObjectID = database.AddSmartObject(smartObjectClass);
+        assertTrue("Couldn't create smartObject.", createdSmartObjectID >= 0);
 
-        boolean doesItemExist = database.IsItem(createdItemID + 1);
-        assertTrue("IsItem() returned true.", doesItemExist);
+        boolean doesSmartObjectExist = database.IsSmartObject(createdSmartObjectID + 1);
+        assertTrue("IsSmartObject() returned true.", doesSmartObjectExist);
     }
 
     @Test
-    public void testRemoveItem() {
+    public void testRemoveSmartObject() {
 
-        String itemClass = "testClass";
+        String smartObjectClass = "testClass";
         DatabaseAPI database = DatabaseHandler.Get();
 
-        int createdItemID = database.AddItem(itemClass);
-        assertTrue("Couldn't create item.", createdItemID >= 0);
+        int createdSmartObjectID = database.AddSmartObject(smartObjectClass);
+        assertTrue("Couldn't create smartObject.", createdSmartObjectID >= 0);
 
-        boolean isItemRemoved = database.RemoveItem(createdItemID);
-        assertTrue("RemoveItem() returned false.", isItemRemoved);
+        boolean isSmartObjectRemoved = database.RemoveSmartObject(createdSmartObjectID);
+        assertTrue("RemoveSmartObject() returned false.", isSmartObjectRemoved);
     }
 
     @Test
-    public void testRemoveNonExistingItem() {
+    public void testRemoveNonExistingSmartObject() {
 
-        String itemClass = "testClass";
+        String smartObjectClass = "testClass";
         DatabaseAPI database = DatabaseHandler.Get();
 
-        int createdItemID = database.AddItem(itemClass);
-        assertTrue("Couldn't create item.", createdItemID >= 0);
+        int createdSmartObjectID = database.AddSmartObject(smartObjectClass);
+        assertTrue("Couldn't create smartObject.", createdSmartObjectID >= 0);
 
-        boolean isItemRemoved = database.IsItem(createdItemID + 1);
-        assertTrue("RemoveItem() returned true.", isItemRemoved);
+        boolean isSmartObjectRemoved = database.IsSmartObject(createdSmartObjectID + 1);
+        assertTrue("RemoveSmartObject() returned true.", isSmartObjectRemoved);
     }
 
     @Test
@@ -546,32 +546,32 @@ public class DatabaseAPITests {
     }
 
     @Test
-    public void testItemStringParamFirstTimeSet()
+    public void testSmartObjectStringParamFirstTimeSet()
     {
-        String testParamViaGetParam = (String)SetParameterFirstTimeAndReturnIt(testedItemOwner, testedStringParam);
+        String testParamViaGetParam = (String)SetParameterFirstTimeAndReturnIt(testedSmartObjectOwner, testedStringParam);
         assertEquals("Param value got via GetParam() isn't equal to the one used in SetParam()", testStringParamValue,testParamViaGetParam);
     }
 
     @Test
-    public void testItemStringParamSetAgain()
+    public void testSmartObjectStringParamSetAgain()
     {
         String secondTestStringParamValue = "testStringParamValue";
         StringParam secondTestParam = new StringParam("secondTestStringParamName",secondTestStringParamValue);
 
-        String testParamViaGetParam = (String)testSetParameterAgainAndReturnIt(testedItemOwner, testedStringParam,secondTestParam);
+        String testParamViaGetParam = (String)testSetParameterAgainAndReturnIt(testedSmartObjectOwner, testedStringParam,secondTestParam);
         assertEquals("Param value got via GetParam() isn't equal to the one used in SetParam()",testStringParamValue,testParamViaGetParam);
     }
 
     @Test
-    public void testItemStringParamRemove()
+    public void testSmartObjectStringParamRemove()
     {
-        testRemoveParameter(testedItemOwner,testedStringParam);
+        testRemoveParameter(testedSmartObjectOwner,testedStringParam);
     }
 
     @Test
-    public void testRemoveNonExistingItemStringParam()
+    public void testRemoveNonExistingSmartObjectStringParam()
     {
-        testRemoveNonExistingParameter(testedItemOwner,testedStringParam);
+        testRemoveNonExistingParameter(testedSmartObjectOwner,testedStringParam);
     }
 
     @Test
@@ -604,40 +604,40 @@ public class DatabaseAPITests {
     }
 
     @Test
-    public void testItemDoubleParamFirstTimeSet()
+    public void testSmartObjectDoubleParamFirstTimeSet()
     {
-        double testParamViaGetParam = (Double)SetParameterFirstTimeAndReturnIt(testedItemOwner, testedDoubleParam);
+        double testParamViaGetParam = (Double)SetParameterFirstTimeAndReturnIt(testedSmartObjectOwner, testedDoubleParam);
         assertEquals("Param value got via GetParam() isn't equal to the one used in SetParam()", testDoubleParamValue,testParamViaGetParam,0.0001);
     }
 
     @Test
-    public void testItemDoubleParamSetAgain()
+    public void testSmartObjectDoubleParamSetAgain()
     {
         double secondTestDoubleParamValue = 7.142;
         DoubleParam secondTestParam = new DoubleParam("secondTestDoubleParamName",secondTestDoubleParamValue);
 
-        double testParamViaGetParam = (Double)testSetParameterAgainAndReturnIt(testedItemOwner, testedDoubleParam,secondTestParam);
+        double testParamViaGetParam = (Double)testSetParameterAgainAndReturnIt(testedSmartObjectOwner, testedDoubleParam,secondTestParam);
         assertEquals("Param value got via GetParam() isn't equal to the one used in SetParam()",testDoubleParamValue,testParamViaGetParam,0.0001);
     }
 
     @Test
-    public void testItemDoubleParamRemove()
+    public void testSmartObjectDoubleParamRemove()
     {
-        testRemoveParameter(testedItemOwner,testedDoubleParam);
+        testRemoveParameter(testedSmartObjectOwner,testedDoubleParam);
     }
 
     @Test
-    public void testRemoveNonExistingItemDoubleParam()
+    public void testRemoveNonExistingSmartObjectDoubleParam()
     {
-        testRemoveNonExistingParameter(testedItemOwner,testedDoubleParam);
+        testRemoveNonExistingParameter(testedSmartObjectOwner,testedDoubleParam);
     }
 
     private void InitDatabase() {
         MainConfig.SetConfig();
         SQLServersCollection.addServer(new LocalTestServerParameters());
 
-        testItem = new TestItem(6);
-        testedItemOwner = new ItemParam(testItem);
+        testSmartObject = new TestSmartObject(6);
+        testedSmartObjectOwner = new SmartObjectParam(testSmartObject);
         User.Create(testUserUsername,testUserPassword);
         testUser = User.Get(testUserUsername);
         testedUserOwner = new UserParam(testUser);
@@ -775,8 +775,8 @@ public class DatabaseAPITests {
     private UserParam testedUserOwner;
     private final StringParam testedStringParam = new StringParam("testStringParamName",testStringParamValue);
 
-    private Item testItem;
+    private SmartObject testSmartObject;
     private final double testDoubleParamValue = 14.2;
-    private ItemParam testedItemOwner;
+    private SmartObjectParam testedSmartObjectOwner;
     private final DoubleParam testedDoubleParam = new DoubleParam("testDoubleParamName",testDoubleParamValue);
 }

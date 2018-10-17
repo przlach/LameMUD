@@ -1,8 +1,8 @@
-package Core.CommandLine.GameLogic;
+package Core.Params.SmartObject;
 
 import Core.Database.API.DatabaseAPI;
 import Core.Database.API.DatabaseHandler;
-import Core.Database.API.Params.ItemParam;
+import Core.Database.API.Params.SmartObjectParam;
 import Core.Params.SmartDouble;
 import Core.Params.SmartParamUpdater;
 import Core.Params.SmartParamUpdaterInput;
@@ -10,52 +10,52 @@ import Core.Params.SmartString;
 
 import java.util.ArrayList;
 
-public abstract class Item {
+public abstract class SmartObject {
 
-    public Item()
+    public SmartObject()
     {
         DatabaseAPI database = DatabaseHandler.Get();
-        this.id = database.AddItem(getItemClassString());
+        this.id = database.AddSmartObject(getSmartObjectClassString());
         smartParams = new SmartParamUpdaterInput(new ArrayList<SmartDouble>(),
                                                  new ArrayList<SmartString>(),
-                                                 new ItemParam(this));
+                                                 new SmartObjectParam(this));
         RegisterSmartParameters();
     }
 
-    public Item(int id)
+    public SmartObject(int id)
     {
         this.id = id;
-        if(id < 0)  // allows to create not properly functioning Item, currently used if you need only to use getItemClassString() of any subclass.
+        if(id < 0)  // allows to create not properly functioning SmartObject, currently used if you need only to use getSmartObjectClassString() of any subclass.
         {
             return;
         }
         smartParams = new SmartParamUpdaterInput(new ArrayList<SmartDouble>(),
                                                  new ArrayList<SmartString>(),
-                                                 new ItemParam(this));
+                                                 new SmartObjectParam(this));
         RegisterSmartParameters();
         GetParametersValuesFromDatabase();
     }
 
-    abstract public String getItemClassString();
+    abstract public String getSmartObjectClassString();
 
     abstract protected void RegisterSmartParameters();
 
     // duno if it will be even used, let it stay for now
-    public static Item GetItemFromDatabase(int id)
+    public static SmartObject GetSmartObjectFromDatabase(int id)
     {
         DatabaseAPI database = DatabaseHandler.Get();
 
-        String itemClassString = database.GetItemClassString(id);
-        if(itemClassString == null)
+        String smartObjectClassString = database.GetSmartObjectClassString(id);
+        if(smartObjectClassString == null)
         {
             return null;
         }
-        Item gettedItem = ItemClassStringToItemConverter.convert(itemClassString,id);
-        if(gettedItem == null)
+        SmartObject gettedSmartObject = SmartObjectClassStringToSmartObjectConverter.convert(smartObjectClassString,id);
+        if(gettedSmartObject == null)
         {
             return null;
         }
-        return gettedItem;
+        return gettedSmartObject;
     }
 
     public void GetParametersValuesFromDatabase()
@@ -99,7 +99,7 @@ public abstract class Item {
 
         RemoveParametersFromDatabase();
         smartParams = null;
-        DatabaseHandler.Get().RemoveItem(this);
+        DatabaseHandler.Get().RemoveSmartObject(this);
 
         AfterRemove();
         return true;

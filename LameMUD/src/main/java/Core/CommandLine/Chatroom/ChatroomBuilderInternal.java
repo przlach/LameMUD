@@ -1,16 +1,16 @@
 package Core.CommandLine.Chatroom;
 
-import Core.CommandLine.GameLogic.Item;
-import Core.CommandLine.GameLogic.ItemBuilderInternal;
+import Core.Params.SmartObject.SmartObject;
+import Core.Params.SmartObject.SmartObjectBuilderInternal;
 
-public class ChatroomBuilderInternal implements ItemBuilderInternal {
+public class ChatroomBuilderInternal implements SmartObjectBuilderInternal {
     @Override
-    public Item Build() {
+    public SmartObject Build() {
         return new Chatroom();
     }
 
     @Override
-    public Item Build(int id) {
+    public SmartObject Build(int id) {
         return new Chatroom(id);
     }
 }

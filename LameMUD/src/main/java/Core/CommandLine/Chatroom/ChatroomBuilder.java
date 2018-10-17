@@ -1,8 +1,8 @@
 package Core.CommandLine.Chatroom;
 
-import Core.CommandLine.GameLogic.ItemBuilder;
+import Core.Params.SmartObject.SmartObjectBuilder;
 
-public class ChatroomBuilder extends ItemBuilder {
+public class ChatroomBuilder extends SmartObjectBuilder {
 
     protected ChatroomBuilder()
     {

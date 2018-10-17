@@ -1,10 +1,10 @@
 package NotUnitTests;
 
-import Core.CommandLine.GameLogic.Item;
+import Core.Params.SmartObject.SmartObject;
 
-public class TestItem extends Item {
+public class TestSmartObject extends SmartObject {
 
-    public TestItem(int id)
+    public TestSmartObject(int id)
     {
         this.fakeID = id;
     }
@@ -15,7 +15,7 @@ public class TestItem extends Item {
     }
 
     @Override
-    public String getItemClassString() {
+    public String getSmartObjectClassString() {
         return null;
     }
 

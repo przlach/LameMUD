@@ -1,10 +1,10 @@
 package Core.Database.Impls.SQL.Param;
 
-import Core.CommandLine.GameLogic.Item;
+import Core.Params.SmartObject.SmartObject;
 
 public class SQLItemParam implements SQLParamOwner {
 
-    SQLItemParam(Item owner)
+    SQLItemParam(SmartObject owner)
     {
         this.owner = owner;
     }
@@ -24,5 +24,5 @@ public class SQLItemParam implements SQLParamOwner {
         return "items";
     }
 
-    private Item owner;
+    private SmartObject owner;
 }

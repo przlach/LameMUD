@@ -1,9 +1,7 @@
 package Core.Database.Impls.SQL;
 
-import Core.CommandLine.GameLogic.Item;
+import Core.Params.SmartObject.SmartObject;
 import Core.CommandLine.Platforms.PlatformMessageHeader;
-import Core.CommandLine.User.User;
-import Core.CommandLine.User.UserBuilder;
 import Core.Database.API.DatabaseAPI;
 import Core.Database.API.DatabaseChatrooms;
 import Core.Database.API.Params.Param;
@@ -268,7 +266,7 @@ public class MySQLDatabase implements DatabaseAPI {
     }
 
     @Override
-    public int AddItem(String classString) {
+    public int AddSmartObject(String classString) {
 
         try {
 
@@ -322,16 +320,16 @@ public class MySQLDatabase implements DatabaseAPI {
     }
 
     @Override
-    public boolean RemoveItem(Item item) {
+    public boolean RemoveSmartObject(SmartObject smartObject) {
 
-       return (RemoveItem(item.GetID()));
+       return (RemoveSmartObject(smartObject.GetID()));
 
     }
 
     @Override
-    public boolean RemoveItem(int itemID) {
+    public boolean RemoveSmartObject(int itemID) {
 
-        if(!IsItem(itemID))
+        if(!IsSmartObject(itemID))
         {
             return false;
         }
@@ -360,7 +358,7 @@ public class MySQLDatabase implements DatabaseAPI {
     }
 
     @Override
-    public String GetItemClassString(int id) {
+    public String GetSmartObjectClassString(int id) {
         String result = null;
         try {
 
@@ -393,7 +391,7 @@ public class MySQLDatabase implements DatabaseAPI {
     }
 
     @Override
-    public boolean IsItem(int id) {
+    public boolean IsSmartObject(int id) {
 
         boolean result;
         try {

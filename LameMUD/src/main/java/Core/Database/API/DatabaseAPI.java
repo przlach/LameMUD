@@ -1,6 +1,6 @@
 package Core.Database.API;
 
-import Core.CommandLine.GameLogic.Item;
+import Core.Params.SmartObject.SmartObject;
 import Core.CommandLine.Platforms.PlatformMessageHeader;
 import Core.Database.API.Params.Param;
 import Core.Database.API.Params.ParamOwner;
@@ -16,11 +16,11 @@ public interface DatabaseAPI {
     public String GetUsername(int id);
     public boolean IsUser(String username);
 
-    public int AddItem(String classString);
-    public boolean RemoveItem(Item item);
-    public boolean RemoveItem(int itemID);
-    public String GetItemClassString(int id);
-    public boolean IsItem(int id);
+    public int AddSmartObject(String classString);
+    public boolean RemoveSmartObject(SmartObject smartObject);
+    public boolean RemoveSmartObject(int itemID);
+    public String GetSmartObjectClassString(int id);
+    public boolean IsSmartObject(int id);
 
     public boolean SetParam(ParamOwner owner, Param param);
     public Object GetParam(ParamOwner owner, Param param);

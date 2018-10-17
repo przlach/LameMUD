@@ -1,18 +1,17 @@
 package Core.CommandLine.Chatroom;
 
-import Core.CommandLine.GameLogic.Item;
+import Core.Params.SmartObject.SmartObject;
 import Core.Params.SmartDouble;
 import Core.Params.SmartString;
 import Core.CommandLine.Messaging.MessageModifyExecutor;
 import Core.CommandLine.Messaging.MessageSender;
 import Core.CommandLine.User.User;
-import Core.CommandLine.User.UserBuilder;
 import Core.Database.API.DatabaseAPI;
 import Core.Database.API.DatabaseHandler;
 
 import java.util.ArrayList;
 
-public class Chatroom extends Item {
+public class Chatroom extends SmartObject {
 
     public Chatroom()
     {
@@ -48,14 +47,14 @@ public class Chatroom extends Item {
         int chatroomID = DatabaseHandler.Get().chatrooms().GetChatroomID(name);
         if(chatroomID > -1)
         {
-            Chatroom gettedChatroom = (Chatroom) Chatroom.GetItemFromDatabase(chatroomID);
+            Chatroom gettedChatroom = (Chatroom) Chatroom.GetSmartObjectFromDatabase(chatroomID);
             return gettedChatroom;
         }
         return null;
     }
 
     @Override
-    public String getItemClassString() {
+    public String getSmartObjectClassString() {
         return "chatroom";
     }
 

@@ -227,7 +227,7 @@ public class SQLDatabaseChatroom implements DatabaseChatrooms {
             String query = "SELECT items.id " +
                            "FROM items INNER JOIN itemsStringParams " +
                            "ON items.id=itemsStringParams.itemId " +
-                           "WHERE items.className='"+chatroom.getItemClassString()+"' " +
+                           "WHERE items.className='"+chatroom.getSmartObjectClassString()+"' " +
                                  "AND itemsStringParams.paramName='name' " +
                                  "AND itemsStringParams.paramVal='"+name+"';";
 
@@ -276,7 +276,7 @@ public class SQLDatabaseChatroom implements DatabaseChatrooms {
                                  "WHERE paramName='hidden'AND paramVal='true') " +
                                "GROUP BY itemID) " +
                              "table1 " +
-                           "INNER JOIN (SELECT id FROM items WHERE className='"+chatroom.getItemClassString()+"') table2 ON table1.itemID=table2.id) " +
+                           "INNER JOIN (SELECT id FROM items WHERE className='"+chatroom.getSmartObjectClassString()+"') table2 ON table1.itemID=table2.id) " +
                          "visibleChatroomsIDs " +
                          "INNER join " +
                          "itemsStringParams " +
@@ -317,7 +317,7 @@ public class SQLDatabaseChatroom implements DatabaseChatrooms {
             String query = "SELECT itemsStringParams.paramVal " +
                     "FROM items INNER JOIN itemsStringParams " +
                     "ON items.id=itemsStringParams.itemId " +
-                    "WHERE items.className='"+chatroom.getItemClassString()+"' AND itemsStringParams.paramName='name';";
+                    "WHERE items.className='"+chatroom.getSmartObjectClassString()+"' AND itemsStringParams.paramName='name';";
 
             ResultSet uprs = stmt.executeQuery(query);
 
