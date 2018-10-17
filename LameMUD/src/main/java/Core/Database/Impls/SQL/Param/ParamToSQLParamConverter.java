@@ -36,7 +36,7 @@ public class ParamToSQLParamConverter {
         }
         else if(owner instanceof SmartObjectParam)
         {
-            SQLItemParam convertedOwner = new SQLItemParam(((SmartObjectParam) owner).GetItem());
+            SQLSmartObjectParam convertedOwner = new SQLSmartObjectParam(((SmartObjectParam) owner).GetSmartObject());
             return convertedOwner;
         }
         else

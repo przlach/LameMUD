@@ -284,7 +284,7 @@ public class MySQLDatabase implements DatabaseAPI {
             stmt.close();
             con.close();
 
-            return GetIDOfNewestItem();// remake this shittoooo GetUser(username);
+            return GetIDOfNewestSmartObject();// remake this shittoooo GetUser(username);
 
 
         } catch (SQLException e) {
@@ -294,7 +294,7 @@ public class MySQLDatabase implements DatabaseAPI {
         }
     }
 
-    private int GetIDOfNewestItem()
+    private int GetIDOfNewestSmartObject()
     {
         try {
 
@@ -327,9 +327,9 @@ public class MySQLDatabase implements DatabaseAPI {
     }
 
     @Override
-    public boolean RemoveSmartObject(int itemID) {
+    public boolean RemoveSmartObject(int smartObjectID) {
 
-        if(!IsSmartObject(itemID))
+        if(!IsSmartObject(smartObjectID))
         {
             return false;
         }
@@ -338,7 +338,7 @@ public class MySQLDatabase implements DatabaseAPI {
 
             Connection con = SQLSelectedServer.getConnection();
             Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE , ResultSet.CONCUR_UPDATABLE);
-            ResultSet uprs = stmt.executeQuery("SELECT * FROM items WHERE id="+itemID+";");
+            ResultSet uprs = stmt.executeQuery("SELECT * FROM items WHERE id="+ smartObjectID +";");
 
             uprs.first();
             uprs.deleteRow();
@@ -368,7 +368,7 @@ public class MySQLDatabase implements DatabaseAPI {
 
             if(! uprs.next())
             {
-                Logger.Log("No item found in database with id: " + id,
+                Logger.Log("No smartObject found in database with id: " + id,
                         "SQL");
             }
             else
@@ -402,7 +402,7 @@ public class MySQLDatabase implements DatabaseAPI {
 
             if(! uprs.next())
             {
-                Logger.Log("No item found in database with id: " + id,
+                Logger.Log("No smartObject found in database with id: " + id,
                         "SQL");
                 result = false;
             }

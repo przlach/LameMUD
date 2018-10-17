@@ -18,7 +18,7 @@ public interface DatabaseAPI {
 
     public int AddSmartObject(String classString);
     public boolean RemoveSmartObject(SmartObject smartObject);
-    public boolean RemoveSmartObject(int itemID);
+    public boolean RemoveSmartObject(int smartObjectID);
     public String GetSmartObjectClassString(int id);
     public boolean IsSmartObject(int id);
 

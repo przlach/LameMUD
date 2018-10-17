@@ -9,7 +9,7 @@ public class SmartObjectParam implements ParamOwner{
         this.owner = owner;
     }
 
-    public SmartObject GetItem()
+    public SmartObject GetSmartObject()
     {
         return owner;
     }

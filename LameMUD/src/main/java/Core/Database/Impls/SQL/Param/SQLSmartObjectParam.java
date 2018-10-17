@@ -2,9 +2,9 @@ package Core.Database.Impls.SQL.Param;
 
 import Core.Params.SmartObject.SmartObject;
 
-public class SQLItemParam implements SQLParamOwner {
+public class SQLSmartObjectParam implements SQLParamOwner {
 
-    SQLItemParam(SmartObject owner)
+    SQLSmartObjectParam(SmartObject owner)
     {
         this.owner = owner;
     }
