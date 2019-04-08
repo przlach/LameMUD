@@ -177,7 +177,8 @@ public class MySQLCommon {
                                    "itemsStringParams", "id int NOT NULL AUTO_INCREMENT, itemId int, paramName varchar(32), paramVal varchar(32), PRIMARY KEY (id)",
                                    "platforms", "id int NOT NULL AUTO_INCREMENT, name varchar(32), PRIMARY KEY (id)",
                                    "trustedPlatforms","platformID int, headerID varchar(64), userID int, CONSTRAINT PKTrustedPlatforms PRIMARY KEY (platformID,headerID,userID)",
-                                   "usrsInChatrooms","id int NOT NULL AUTO_INCREMENT, chatroomID int, userID int, PRIMARY KEY (id)"};
+                                   "usrsInChatrooms","id int NOT NULL AUTO_INCREMENT, chatroomID int, userID int, PRIMARY KEY (id)",
+                                   "gameInstances","id int NOT NULL AUTO_INCREMENT, name varchar(32), hashedPwd varchar(255), PRIMARY KEY (id)"};
 
         Table[] baseTables = new Table[baseTableInits.length/2];
         for(int i=0;i<baseTables.length;i++)
