@@ -2,9 +2,13 @@ package Core.CommandLine.Commands.Chatrooms;
 
 import Core.CommandLine.Chatroom.Chatroom;
 import Core.CommandLine.Commands.Command;
+import Core.CommandLine.Messaging.ChatroomFormattedMessage;
+import Core.CommandLine.Messaging.MessageSender;
+import Core.CommandLine.User.User;
 import Core.CommandLine.VerifiedMessage;
 import Core.Database.API.DatabaseHandler;
 
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 
 public class SendMessageToChatroom extends Command {
@@ -82,7 +86,9 @@ public class SendMessageToChatroom extends Command {
 
         if(commandResponse.equals(""))
         {
-            targetChatroom.SendMessage(caller.GetUser(),messageToSend);
+            LinkedList<User> targets = targetChatroom.GetUsers();
+            ChatroomFormattedMessage formattedMsg = new ChatroomFormattedMessage(messageToSend,caller.GetUser(),targetChatroom);
+            MessageSender.SystemMessageToUser(targets,formattedMsg);
         }
         else
         {

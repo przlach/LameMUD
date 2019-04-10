@@ -1,6 +1,7 @@
 package Core.CommandLine.User;
 
 import Core.CommandLine.Chatroom.Chatroom;
+import Core.CommandLine.Messaging.NoFormatMessage;
 import Core.CommandLine.Platforms.PlatformMessageHeader;
 import Core.Database.API.DatabaseAPI;
 import Core.Params.SmartDouble;
@@ -145,7 +146,8 @@ public class User {
 
         if(defaultChatroom.SetValueInDatabase(smartParams.getOwner()))
         {
-            MessageSender.SystemMessageToUser(this,chatroomName+" set as default chatroom.");
+            NoFormatMessage message = new NoFormatMessage(chatroomName+" set as default chatroom.");
+            MessageSender.SystemMessageToUser(this,message);
             return true;
         }
 
