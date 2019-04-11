@@ -48,7 +48,7 @@ public class LeaveChatroom extends Command {
                 String messageToChatroom = caller.GetUser().getUsername() + " leaved chatroom.";
 
                 LinkedList<User> targets = leavedChatroom.GetUsers();
-                ChatroomFormattedMessage formattedMsg = new ChatroomFormattedMessage(messageToChatroom,caller.GetUser(),leavedChatroom);
+                ChatroomFormattedMessage formattedMsg = new ChatroomFormattedMessage(messageToChatroom,null,leavedChatroom);
                 MessageSender.SystemMessageToUser(targets,formattedMsg);
             }
             else

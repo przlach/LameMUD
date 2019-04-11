@@ -56,7 +56,7 @@ public class JoinChatroom extends Command {
 
                 LinkedList<User> targets = chatroom.GetUsers();
                 targets.remove(caller.GetUser());
-                ChatroomFormattedMessage formattedMsg = new ChatroomFormattedMessage(messageToChatroom,caller.GetUser(),chatroom);
+                ChatroomFormattedMessage formattedMsg = new ChatroomFormattedMessage(messageToChatroom,null,chatroom);
                 MessageSender.SystemMessageToUser(targets,formattedMsg);
 
                 caller.GetUser().AutoSetDefaultChatroomIfNone();
