@@ -1,17 +1,17 @@
-package NotUnitTests.Utils;
+package SystemTests.Utils;
 
 import Core.CommandLine.Platforms.PlatformMessageHeader;
 
 public class StubPlatformHeader implements PlatformMessageHeader {
 
-    public StubPlatformHeader(StubPlatform platform)
+    public StubPlatformHeader(StubUserConsole platform)
     {
         owner = platform;
     }
 
     @Override
     public void SendMessage(String msgReply) {
-        owner.SendMessage(msgReply);
+        owner.ReceiveReply(msgReply);
     }
 
     @Override
@@ -56,5 +56,5 @@ public class StubPlatformHeader implements PlatformMessageHeader {
     private String userIdentifier = "stubUnsetUserID";
     private String sessionIdentifier = "stubSessionID";
 
-    public StubPlatform owner;
+    public StubUserConsole owner;
 }

@@ -3,6 +3,7 @@ package Core.Config;
 import Core.CommandLine.Commands.AccountManagment.AccountManagmentCommands;
 import Core.CommandLine.Commands.Chatrooms.ChatroomsCommands;
 import Core.CommandLine.Commands.Commands;
+import Core.CommandLine.Commands.Instances.InstancesCommands;
 import Core.CommandLine.Commands.Other.Help;
 import Core.CommandLine.Commands.Other.SetWelcomeMessage;
 import Core.Database.API.DatabaseHandler;
@@ -46,6 +47,7 @@ public class MainConfig {
     {
         Commands.AddAvaibleCommands(AccountManagmentCommands.Get());
         Commands.AddAvaibleCommands(ChatroomsCommands.Get());
+        Commands.AddAvaibleCommands(InstancesCommands.Get());
         Commands.AddAvaibleCommand(new Help());
         Commands.AddAvaibleCommand(new SetWelcomeMessage());
     }

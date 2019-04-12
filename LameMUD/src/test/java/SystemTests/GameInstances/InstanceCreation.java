@@ -1,4 +1,4 @@
-package NotUnitTests.GameInstances;
+package SystemTests.GameInstances;
 
 import Core.CommandLine.MainInterpreter;
 import Core.CommandLine.Platforms.PlatformMessage;
@@ -8,8 +8,11 @@ import Core.Database.Impls.SQL.Connection.SQLSelectedServer;
 import Core.Database.Impls.SQL.Connection.SQLServersCollection;
 import Extensions.Platforms.LocalExecutionPlatform.GUI.LocalClient;
 import Extensions.Platforms.LocalExecutionPlatformHeader;
+import SystemTests.Utils.StubUserConsole;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +25,9 @@ public class InstanceCreation {
     {
         MainConfig.SetConfig();
         SQLServersCollection.addServer(new LocalTestServerParameters());
+
+        user1 = new StubUserConsole();
+        user1.RegisterAndLogin();
     }
 
     public void WipeAllInstances()
@@ -42,27 +48,20 @@ public class InstanceCreation {
 
     public void AssertPrintInstancesOutput(String output, String[] expectedInstanceNames)
     {
-
-    }
-
-    public void ExecuteCommand(String command)
-    {
-        LocalClient owner = new LocalClient();
-        LocalExecutionPlatformHeader header = new LocalExecutionPlatformHeader();
-
-        PlatformMessage platformMessage = new PlatformMessage();
-        platformMessage.SetMessage(command);
-        platformMessage.SetHeader(LocalExecutionPlatformHeader);
-
-        MainInterpreter.HandleMessage();
+        System.out.println(output);
     }
 
     @Test
     public void PrintInstancesWhenThereIsNone()
     {
         WipeAllInstances();
+        StubUserConsole user1Spy = Mockito.spy(user1);
 
-        String printInstancesOutput = ExecuteCommand("/instance list");
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        user1.SendMessage("/instance list");
+        Mockito.verify(user1Spy).ReceiveReply(captor.capture());
+
+        String printInstancesOutput = captor.getValue();
 
         String[] expectedInstances = { };
         AssertPrintInstancesOutput(printInstancesOutput, expectedInstances);
@@ -72,13 +71,21 @@ public class InstanceCreation {
     public void CreateFirstInstanceWithoutPassword()
     {
         WipeAllInstances();
+        StubUserConsole user1Spy = Mockito.spy(user1);
 
         String instanceName = "game1";
 
-        String createInstanceOutput = ExecuteCommand("/instance create " + instanceName);
+        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
+        user1.SendMessage("/instance create " + instanceName);
+        Mockito.verify(user1Spy).ReceiveReply(captor.capture());
+
+        String createInstanceOutput = captor.getValue();
         // expect createInstanceOutput
 
-        String printInstancesOutput = PrintInstancesCommand();
+        user1.SendMessage("/instance list");
+        Mockito.verify(user1Spy).ReceiveReply(captor.capture());
+
+        String printInstancesOutput = captor.getValue();
 
         String[] expectedInstances = { instanceName };
         AssertPrintInstancesOutput(printInstancesOutput, expectedInstances);
@@ -108,6 +115,6 @@ public class InstanceCreation {
 
     }
 
-
+    private StubUserConsole user1;
 
 }
