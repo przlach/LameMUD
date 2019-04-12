@@ -1,14 +1,13 @@
-package SystemTests.GameInstances;
+package IntegrationTests.GameInstances;
 
-import Core.CommandLine.MainInterpreter;
-import Core.CommandLine.Platforms.PlatformMessage;
+import Core.CommandLine.Commands.Chatrooms.ListChatrooms;
+import Core.CommandLine.Commands.Instances.ListInstances;
+import Core.CommandLine.VerifiedMessage;
 import Core.Config.LocalTestServerParameters;
 import Core.Config.MainConfig;
 import Core.Database.Impls.SQL.Connection.SQLSelectedServer;
 import Core.Database.Impls.SQL.Connection.SQLServersCollection;
-import Extensions.Platforms.LocalExecutionPlatform.GUI.LocalClient;
-import Extensions.Platforms.LocalExecutionPlatformHeader;
-import SystemTests.Utils.StubUserConsole;
+import IntegrationTests.GameInstances.Utils.StubUserConsole;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -18,16 +17,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 public class InstanceCreation {
 
     @Before
     public void setUp()
     {
-        MainConfig.SetConfig();
+        //MainConfig.SetConfig();
         SQLServersCollection.addServer(new LocalTestServerParameters());
 
-        user1 = new StubUserConsole();
-        user1.RegisterAndLogin();
+        //user1 = new StubUserConsole();
+        //user1.RegisterAndLogin();
     }
 
     public void WipeAllInstances()
@@ -48,18 +50,37 @@ public class InstanceCreation {
 
     public void AssertPrintInstancesOutput(String output, String[] expectedInstanceNames)
     {
-        System.out.println(output);
+        String[] outputLines = output.split("\\s");  // TODO what is regexp for new line?
+        assertEquals("Wrong number of instances", expectedInstanceNames.length, outputLines.length - 1);
+
+        if(expectedInstanceNames.length == 0)
+        {
+            assertEquals("Wrong reply of instance list when there are no intances",
+                    "There are no instances.",
+                    output);
+            return;
+        }
+
+        for(int i=1; i < outputLines.length; ++i)
+        {
+            assertEquals("Mismatching instance names", expectedInstanceNames[i-1], outputLines[i]);
+        }
     }
 
     @Test
     public void PrintInstancesWhenThereIsNone()
     {
-        WipeAllInstances();
-        StubUserConsole user1Spy = Mockito.spy(user1);
+        //WipeAllInstances();
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        user1.SendMessage("/instance list");
-        Mockito.verify(user1Spy).ReceiveReply(captor.capture());
+        VerifiedMessage message = mock(VerifiedMessage.class);
+        when(message.GetMessage()).thenReturn("/instance list");
+
+        ListInstances executedCommand = new ListInstances();
+        when(message.IsUserLoggedIn()).thenReturn(true);
+
+        executedCommand.ExecuteCommandWithLoginCheck(message);
+        verify(message).Reply(captor.capture());
 
         String printInstancesOutput = captor.getValue();
 
@@ -71,19 +92,19 @@ public class InstanceCreation {
     public void CreateFirstInstanceWithoutPassword()
     {
         WipeAllInstances();
-        StubUserConsole user1Spy = Mockito.spy(user1);
+        //StubUserConsole user1Spy = Mockito.spy(user1);
 
         String instanceName = "game1";
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        user1.SendMessage("/instance create " + instanceName);
-        Mockito.verify(user1Spy).ReceiveReply(captor.capture());
+        //user1.SendMessage("/instance create " + instanceName);
+        //Mockito.verify(user1Spy).ReceiveReply(captor.capture());
 
         String createInstanceOutput = captor.getValue();
         // expect createInstanceOutput
 
-        user1.SendMessage("/instance list");
-        Mockito.verify(user1Spy).ReceiveReply(captor.capture());
+        //user1.SendMessage("/instance list");
+        //Mockito.verify(user1Spy).ReceiveReply(captor.capture());
 
         String printInstancesOutput = captor.getValue();
 
@@ -115,6 +136,6 @@ public class InstanceCreation {
 
     }
 
-    private StubUserConsole user1;
+    //private StubUserConsole user1;
 
 }

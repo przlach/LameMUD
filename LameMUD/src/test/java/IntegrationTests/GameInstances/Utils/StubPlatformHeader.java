@@ -1,4 +1,4 @@
-package SystemTests.Utils;
+package IntegrationTests.GameInstances.Utils;
 
 import Core.CommandLine.Platforms.PlatformMessageHeader;
 

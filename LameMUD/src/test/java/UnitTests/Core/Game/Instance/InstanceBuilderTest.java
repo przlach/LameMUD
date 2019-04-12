@@ -1,8 +1,10 @@
-package Core.Game.Instance;
+package UnitTests.Core.Game.Instance;
 
 import Core.Database.API.DatabaseGameInstances;
 import Core.Database.API.DatabaseHandler;
-import Core.Database.Impls.SQL.MySQLDatabase;
+import Core.Game.Instance.Instance;
+import Core.Game.Instance.InstanceBuilder;
+import Core.Game.Instance.InstanceBuilderError;
 import org.junit.Before;
 import org.junit.Test;
 

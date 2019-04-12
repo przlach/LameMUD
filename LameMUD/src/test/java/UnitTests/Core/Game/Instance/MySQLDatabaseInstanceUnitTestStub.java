@@ -1,4 +1,4 @@
-package Core.Game.Instance;
+package UnitTests.Core.Game.Instance;
 
 import Core.CommandLine.Platforms.PlatformMessageHeader;
 import Core.Database.API.DatabaseAPI;
