@@ -78,17 +78,18 @@ public class InstanceCreation {
     {
         WipeAllInstances();
 
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        VerifiedMessage message = mock(VerifiedMessage.class);
-        when(message.GetMessage()).thenReturn("/instance list");
+        ArgumentCaptor<String> commandReplyCaptor = ArgumentCaptor.forClass(String.class);
+        VerifiedMessage userCommand = mock(VerifiedMessage.class);
+        when(userCommand.GetMessage()).thenReturn("/instance list");
+        when(userCommand.IsUserLoggedIn()).thenReturn(true);
 
         ListInstances executedCommand = new ListInstances();
-        when(message.IsUserLoggedIn()).thenReturn(true);
 
-        executedCommand.ExecuteCommandWithLoginCheck(message);
-        verify(message).Reply(captor.capture());
+        executedCommand.ExecuteCommandWithLoginCheck(userCommand);
+        verify(userCommand).Reply(commandReplyCaptor.capture());
+        // verify command used Database.getAllInstances(); or something
 
-        String printInstancesOutput = captor.getValue();
+        String printInstancesOutput = commandReplyCaptor.getValue();
 
         String[] expectedInstances = { };
         AssertPrintInstancesOutput(printInstancesOutput, expectedInstances);
@@ -102,17 +103,25 @@ public class InstanceCreation {
 
         String instanceName = "game1";
 
-        ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
-        //user1.SendMessage("/instance create " + instanceName);
-        //Mockito.verify(user1Spy).ReceiveReply(captor.capture());
+        ArgumentCaptor<String> commandReplyCaptor = ArgumentCaptor.forClass(String.class);
+        VerifiedMessage userCommand = mock(VerifiedMessage.class);
+        when(userCommand.GetMessage()).thenReturn("/instance create " + instanceName);
+        when(userCommand.IsUserLoggedIn()).thenReturn(true);
 
-        String createInstanceOutput = captor.getValue();
+        CreateInstance createInstanceCommand = new CreateInstance();
+        createInstanceCommand.ExecuteCommandWithLoginCheck(userCommand);
+
+
+        String createInstanceOutput = commandReplyCaptor.getValue();
         // expect createInstanceOutput
 
         //user1.SendMessage("/instance list");
         //Mockito.verify(user1Spy).ReceiveReply(captor.capture());
 
-        String printInstancesOutput = captor.getValue();
+        ListInstances executedCommand2 = new ListInstances();
+        executedCommand2.ExecuteCommandWithLoginCheck(userCommand);
+
+        String printInstancesOutput = commandReplyCaptor.getValue();
 
         String[] expectedInstances = { instanceName };
         AssertPrintInstancesOutput(printInstancesOutput, expectedInstances);
