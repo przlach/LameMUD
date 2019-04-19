@@ -5,8 +5,10 @@ import Core.CommandLine.Commands.Instances.ListInstances;
 import Core.CommandLine.VerifiedMessage;
 import Core.Config.LocalTestServerParameters;
 import Core.Config.MainConfig;
+import Core.Database.API.DatabaseHandler;
 import Core.Database.Impls.SQL.Connection.SQLSelectedServer;
 import Core.Database.Impls.SQL.Connection.SQLServersCollection;
+import Core.Game.Instance.Instance;
 import IntegrationTests.GameInstances.Utils.StubUserConsole;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import org.mockito.Mockito;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -46,11 +49,14 @@ public class InstanceCreation {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+
+        List<Instance> instances = DatabaseHandler.Get().instances().getAllInstances();
+        assertEquals("There shouldn't be any instances", 0, instances.size());
     }
 
     public void AssertPrintInstancesOutput(String output, String[] expectedInstanceNames)
     {
-        String[] outputLines = output.split("\\s");  // TODO what is regexp for new line?
+        String[] outputLines = output.split("\\n");
         assertEquals("Wrong number of instances", expectedInstanceNames.length, outputLines.length - 1);
 
         if(expectedInstanceNames.length == 0)
@@ -70,7 +76,7 @@ public class InstanceCreation {
     @Test
     public void PrintInstancesWhenThereIsNone()
     {
-        //WipeAllInstances();
+        WipeAllInstances();
 
         ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
         VerifiedMessage message = mock(VerifiedMessage.class);
