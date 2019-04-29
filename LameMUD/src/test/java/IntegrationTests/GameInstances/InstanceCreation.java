@@ -5,9 +5,11 @@ import Core.CommandLine.Commands.Instances.ListInstances;
 import Core.CommandLine.VerifiedMessage;
 import Core.Config.LocalTestServerParameters;
 import Core.Config.MainConfig;
+import Core.Database.API.DatabaseAPI;
 import Core.Database.API.DatabaseHandler;
 import Core.Database.Impls.SQL.Connection.SQLSelectedServer;
 import Core.Database.Impls.SQL.Connection.SQLServersCollection;
+import Core.Database.Impls.SQL.MySQLDatabase;
 import Core.Game.Instance.Instance;
 import IntegrationTests.GameInstances.Utils.StubUserConsole;
 import org.junit.Before;
@@ -30,6 +32,13 @@ public class InstanceCreation {
     {
         //MainConfig.SetConfig();
         SQLServersCollection.addServer(new LocalTestServerParameters());
+        InstancesAPI realInstances = new Instances();
+        InstancesAPI spyInstances = Mockito.spy(realInstances);
+        InstancesAPIHandler.set(spyInstances);
+
+        DatabaseAPI realDatabase = new MySQLDatabase();
+        DatabaseAPI spyDatabase = Mockito.spy(realDatabase);
+        DatabaseHandler.set(spyDatabase);
 
         //user1 = new StubUserConsole();
         //user1.RegisterAndLogin();
@@ -83,9 +92,9 @@ public class InstanceCreation {
         when(userCommand.GetMessage()).thenReturn("/instance list");
         when(userCommand.IsUserLoggedIn()).thenReturn(true);
 
-        ListInstances executedCommand = new ListInstances();
+        ListInstances listInstancesCommand = new ListInstances();
 
-        executedCommand.ExecuteCommandWithLoginCheck(userCommand);
+        listInstancesCommand.ExecuteCommandWithLoginCheck(userCommand);
         verify(userCommand).Reply(commandReplyCaptor.capture());
         // verify command used Database.getAllInstances(); or something
 
@@ -110,7 +119,6 @@ public class InstanceCreation {
 
         CreateInstance createInstanceCommand = new CreateInstance();
         createInstanceCommand.ExecuteCommandWithLoginCheck(userCommand);
-
 
         String createInstanceOutput = commandReplyCaptor.getValue();
         // expect createInstanceOutput
