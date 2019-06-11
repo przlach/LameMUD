@@ -33,18 +33,18 @@ public class InstanceCreation {
         //MainConfig.SetConfig();
         SQLServersCollection.addServer(new LocalTestServerParameters());
         InstancesAPI realInstances = new Instances();
-        InstancesAPI spyInstances = Mockito.spy(realInstances);
+        spyInstances = Mockito.spy(realInstances);
         InstancesAPIHandler.set(spyInstances);
 
         DatabaseAPI realDatabase = new MySQLDatabase();
-        DatabaseAPI spyDatabase = Mockito.spy(realDatabase);
+        spyDatabase = Mockito.spy(realDatabase);
         DatabaseHandler.set(spyDatabase);
 
         //user1 = new StubUserConsole();
         //user1.RegisterAndLogin();
     }
 
-    public void WipeAllInstances()
+    private void WipeAllInstances()
     {
         String sql = "DELETE FROM gameInstances";
 
@@ -63,7 +63,7 @@ public class InstanceCreation {
         assertEquals("There shouldn't be any instances", 0, instances.size());
     }
 
-    public void AssertPrintInstancesOutput(String output, String[] expectedInstanceNames)
+    private void AssertPrintInstancesOutput(String output, String[] expectedInstanceNames)
     {
         String[] outputLines = output.split("\\n");
         assertEquals("Wrong number of instances", expectedInstanceNames.length, outputLines.length - 1);
@@ -82,11 +82,8 @@ public class InstanceCreation {
         }
     }
 
-    @Test
-    public void PrintInstancesWhenThereIsNone()
+    private void AssertInstanceList(String[] expectedInstanceNames)
     {
-        WipeAllInstances();
-
         ArgumentCaptor<String> commandReplyCaptor = ArgumentCaptor.forClass(String.class);
         VerifiedMessage userCommand = mock(VerifiedMessage.class);
         when(userCommand.GetMessage()).thenReturn("/instance list");
@@ -96,69 +93,127 @@ public class InstanceCreation {
 
         listInstancesCommand.ExecuteCommandWithLoginCheck(userCommand);
         verify(userCommand).Reply(commandReplyCaptor.capture());
-        // verify command used Database.getAllInstances(); or something
+        verify(spyInstances).getInstancesNames();
+        verify(spyDatabase).instances().getInstances();
 
         String printInstancesOutput = commandReplyCaptor.getValue();
 
+        AssertPrintInstancesOutput(printInstancesOutput, expectedInstanceNames);
+    }
+
+    @Test
+    public void PrintInstancesWhenThereIsNone()
+    {
+        WipeAllInstances();
+
         String[] expectedInstances = { };
-        AssertPrintInstancesOutput(printInstancesOutput, expectedInstances);
+
+        AssertInstanceList(expectedInstances);
+    }
+
+    private String ExecuteCreateInstanceCommand(String createCommandArguments)
+    {
+        ArgumentCaptor<String> commandReplyCaptor = ArgumentCaptor.forClass(String.class);
+        VerifiedMessage userCommand = mock(VerifiedMessage.class);
+        when(userCommand.GetMessage()).thenReturn("/instance create " + createCommandArguments);
+        when(userCommand.IsUserLoggedIn()).thenReturn(true);
+
+        CreateInstance createInstanceCommand = new CreateInstance();
+        createInstanceCommand.ExecuteCommandWithLoginCheck(userCommand);
+        verify(userCommand).Reply(commandReplyCaptor.capture());
+        String createInstanceOutput = commandReplyCaptor.getValue();
+
+        return createInstanceOutput;
     }
 
     @Test
     public void CreateFirstInstanceWithoutPassword()
     {
         WipeAllInstances();
-        //StubUserConsole user1Spy = Mockito.spy(user1);
 
         String instanceName = "game1";
 
-        ArgumentCaptor<String> commandReplyCaptor = ArgumentCaptor.forClass(String.class);
-        VerifiedMessage userCommand = mock(VerifiedMessage.class);
-        when(userCommand.GetMessage()).thenReturn("/instance create " + instanceName);
-        when(userCommand.IsUserLoggedIn()).thenReturn(true);
-
-        CreateInstance createInstanceCommand = new CreateInstance();
-        createInstanceCommand.ExecuteCommandWithLoginCheck(userCommand);
-
-        String createInstanceOutput = commandReplyCaptor.getValue();
-        // expect createInstanceOutput
-
-        //user1.SendMessage("/instance list");
-        //Mockito.verify(user1Spy).ReceiveReply(captor.capture());
-
-        ListInstances executedCommand2 = new ListInstances();
-        executedCommand2.ExecuteCommandWithLoginCheck(userCommand);
-
-        String printInstancesOutput = commandReplyCaptor.getValue();
+        String createInstanceOutput = ExecuteCreateInstanceCommand(instanceName);
+        assertEquals("Instance " + instanceName + " created successfully.", createInstanceOutput);
+        verify(spyInstances).createInstance(instanceName);
+        verify(spyDatabase).instances().getInstance(instanceName);
+        verify(spyDatabase).instances().createInstance(instanceName);
 
         String[] expectedInstances = { instanceName };
-        AssertPrintInstancesOutput(printInstancesOutput, expectedInstances);
+
+        AssertInstanceList(expectedInstances);
     }
 
     @Test
     public void CreateSecondInstanceWithPassword()
     {
+        WipeAllInstances();
 
+        String prevInstanceName = "game1";
+        String instanceName = "game2";
+        String instancePassword = "password1";
+
+        String createInstanceOutput = ExecuteCreateInstanceCommand(prevInstanceName);
+        assertEquals("Instance " + prevInstanceName + " created successfully.", createInstanceOutput);
+        verify(spyInstances).createInstance(prevInstanceName);
+        verify(spyDatabase).instances().getInstance(prevInstanceName);
+        verify(spyDatabase).instances().createInstance(prevInstanceName);
+
+        String createInstance2Output = ExecuteCreateInstanceCommand(instanceName + " " + instancePassword);
+        assertEquals("Instance " + instanceName + " created successfully.", createInstance2Output);
+        verify(spyInstances).createInstance(instanceName, instancePassword);
+        verify(spyDatabase).instances().getInstance(instanceName);
+        verify(spyDatabase).instances().createInstance(instanceName, instancePassword);
+
+        String[] expectedInstances = { prevInstanceName, instanceName };
+
+        AssertInstanceList(expectedInstances);
     }
 
     @Test
     public void CreateInstanceWhenNameIsTaken()
     {
+        WipeAllInstances();
 
+        String instanceName = "game1";
+
+        String createInstanceOutput = ExecuteCreateInstanceCommand(instanceName);
+        assertEquals("Instance " + instanceName + " created successfully.", createInstanceOutput);
+        verify(spyInstances).createInstance(instanceName);
+        verify(spyDatabase).instances().getInstance(instanceName);
+        verify(spyDatabase).instances().createInstance(instanceName);
+
+        String createSameInstanceAgainOutput = ExecuteCreateInstanceCommand(instanceName);
+        assertEquals("Couldn't create instance " + instanceName + ". The name is taken.", createSameInstanceAgainOutput);
+        verify(spyInstances).createInstance(instanceName);
+        verify(spyDatabase).instances().getInstance(instanceName);
+
+        String[] expectedInstances = { instanceName };
+
+        AssertInstanceList(expectedInstances);
     }
 
     @Test
     public void CreateInstanceWithInproperPassword()
     {
+        WipeAllInstances();
 
+        String instanceName = "game3";
+        String instancePassword = "pw";
+
+        String createInstanceOutput = ExecuteCreateInstanceCommand(instanceName + " " + instancePassword);
+        assertEquals("Couldn't create instance " + instanceName + ". The password doesn't match requirements.", createInstanceOutput);
+        verify(spyInstances).createInstance(instanceName, instancePassword);
+        verify(spyDatabase).instances().getInstance(instanceName);
+        //verify(spyInstances).verifyPassword
+        // TODO how to verify incorrect password? collect return of Instances::verifyPasswordCorrectness ?
+
+        String[] expectedInstances = { };
+
+        AssertInstanceList(expectedInstances);
     }
 
-    @Test
-    public void CreateInstanceWithNameTakenAndInproperPassword()
-    {
-
-    }
-
-    //private StubUserConsole user1;
+    private DatabaseAPI spyDatabase;
+    InstancesAPI spyInstances;
 
 }
