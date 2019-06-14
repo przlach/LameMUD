@@ -11,6 +11,9 @@ import Core.Database.Impls.SQL.Connection.SQLSelectedServer;
 import Core.Database.Impls.SQL.Connection.SQLServersCollection;
 import Core.Database.Impls.SQL.MySQLDatabase;
 import Core.Game.Instance.Instance;
+import Core.Game.Instance.Instances;
+import Core.Game.Instance.InstancesAPI;
+import Core.Game.Instance.InstancesAPIHandler;
 import IntegrationTests.GameInstances.Utils.StubUserConsole;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,9 +39,9 @@ public class InstanceCreation {
         spyInstances = Mockito.spy(realInstances);
         InstancesAPIHandler.set(spyInstances);
 
-        DatabaseAPI realDatabase = new MySQLDatabase();
-        spyDatabase = Mockito.spy(realDatabase);
-        DatabaseHandler.set(spyDatabase);
+        //DatabaseAPI realDatabase = new MySQLDatabase();
+        //spyDatabase = Mockito.spy(realDatabase);
+        //DatabaseHandler.set(spyDatabase);
 
         //user1 = new StubUserConsole();
         //user1.RegisterAndLogin();
@@ -59,7 +62,7 @@ public class InstanceCreation {
             System.out.println(e.getMessage());
         }
 
-        List<Instance> instances = DatabaseHandler.Get().instances().getAllInstances();
+        List<Instance> instances = InstancesAPIHandler.get().getAllInstances();
         assertEquals("There shouldn't be any instances", 0, instances.size());
     }
 
@@ -94,7 +97,6 @@ public class InstanceCreation {
         listInstancesCommand.ExecuteCommandWithLoginCheck(userCommand);
         verify(userCommand).Reply(commandReplyCaptor.capture());
         verify(spyInstances).getInstancesNames();
-        verify(spyDatabase).instances().getInstances();
 
         String printInstancesOutput = commandReplyCaptor.getValue();
 
@@ -136,8 +138,8 @@ public class InstanceCreation {
         String createInstanceOutput = ExecuteCreateInstanceCommand(instanceName);
         assertEquals("Instance " + instanceName + " created successfully.", createInstanceOutput);
         verify(spyInstances).createInstance(instanceName);
-        verify(spyDatabase).instances().getInstance(instanceName);
-        verify(spyDatabase).instances().createInstance(instanceName);
+        verify(spyInstances).getInstance(instanceName);
+        //verify(spyDatabase).instances().createInstance(instanceName);
 
         String[] expectedInstances = { instanceName };
 
@@ -156,14 +158,16 @@ public class InstanceCreation {
         String createInstanceOutput = ExecuteCreateInstanceCommand(prevInstanceName);
         assertEquals("Instance " + prevInstanceName + " created successfully.", createInstanceOutput);
         verify(spyInstances).createInstance(prevInstanceName);
-        verify(spyDatabase).instances().getInstance(prevInstanceName);
-        verify(spyDatabase).instances().createInstance(prevInstanceName);
+        verify(spyInstances).getInstance(prevInstanceName);
+        //verify(spyDatabase).instances().getInstance(prevInstanceName);
+        //verify(spyDatabase).instances().createInstance(prevInstanceName);
 
         String createInstance2Output = ExecuteCreateInstanceCommand(instanceName + " " + instancePassword);
         assertEquals("Instance " + instanceName + " created successfully.", createInstance2Output);
         verify(spyInstances).createInstance(instanceName, instancePassword);
-        verify(spyDatabase).instances().getInstance(instanceName);
-        verify(spyDatabase).instances().createInstance(instanceName, instancePassword);
+        verify(spyInstances).getInstance(instanceName);
+        //verify(spyDatabase).instances().getInstance(instanceName);
+        //verify(spyDatabase).instances().createInstance(instanceName, instancePassword);
 
         String[] expectedInstances = { prevInstanceName, instanceName };
 
@@ -180,13 +184,13 @@ public class InstanceCreation {
         String createInstanceOutput = ExecuteCreateInstanceCommand(instanceName);
         assertEquals("Instance " + instanceName + " created successfully.", createInstanceOutput);
         verify(spyInstances).createInstance(instanceName);
-        verify(spyDatabase).instances().getInstance(instanceName);
-        verify(spyDatabase).instances().createInstance(instanceName);
+        verify(spyInstances).getInstance(instanceName);
+        //verify(spyDatabase).instances().createInstance(instanceName);
 
         String createSameInstanceAgainOutput = ExecuteCreateInstanceCommand(instanceName);
         assertEquals("Couldn't create instance " + instanceName + ". The name is taken.", createSameInstanceAgainOutput);
-        verify(spyInstances).createInstance(instanceName);
-        verify(spyDatabase).instances().getInstance(instanceName);
+        verify(spyInstances).getInstance(instanceName);
+        //verify(spyDatabase).instances().getInstance(instanceName);
 
         String[] expectedInstances = { instanceName };
 
@@ -204,7 +208,7 @@ public class InstanceCreation {
         String createInstanceOutput = ExecuteCreateInstanceCommand(instanceName + " " + instancePassword);
         assertEquals("Couldn't create instance " + instanceName + ". The password doesn't match requirements.", createInstanceOutput);
         verify(spyInstances).createInstance(instanceName, instancePassword);
-        verify(spyDatabase).instances().getInstance(instanceName);
+        verify(spyInstances).getInstance(instanceName);
         //verify(spyInstances).verifyPassword
         // TODO how to verify incorrect password? collect return of Instances::verifyPasswordCorrectness ?
 
@@ -213,7 +217,7 @@ public class InstanceCreation {
         AssertInstanceList(expectedInstances);
     }
 
-    private DatabaseAPI spyDatabase;
+    //private DatabaseAPI spyDatabase;
     InstancesAPI spyInstances;
 
 }
