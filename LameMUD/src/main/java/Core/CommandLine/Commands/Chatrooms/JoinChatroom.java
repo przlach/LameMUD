@@ -2,8 +2,12 @@ package Core.CommandLine.Commands.Chatrooms;
 
 import Core.CommandLine.Chatroom.Chatroom;
 import Core.CommandLine.Commands.Command;
+import Core.CommandLine.Messaging.ChatroomFormattedMessage;
+import Core.CommandLine.Messaging.MessageSender;
+import Core.CommandLine.User.User;
 import Core.CommandLine.VerifiedMessage;
 
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 
 public class JoinChatroom extends Command {
@@ -47,8 +51,13 @@ public class JoinChatroom extends Command {
             if(chatroom.AddUser(caller.GetUser(),chatroomPassword))
             {
                 commandResponse = "<p>You are added to chatroom successfully.</p>";
-                chatroom.SendMessage(caller.GetUser().getUsername() + " joined chatroom.");
-                // TODO do something so user that just joined doesn't get this message (or at least not the exact same)
+
+                String messageToChatroom = caller.GetUser().getUsername() + " joined chatroom.";
+
+                LinkedList<User> targets = chatroom.GetUsers();
+                targets.remove(caller.GetUser());
+                ChatroomFormattedMessage formattedMsg = new ChatroomFormattedMessage(messageToChatroom,null,chatroom);
+                MessageSender.SystemMessageToUser(targets,formattedMsg);
 
                 caller.GetUser().AutoSetDefaultChatroomIfNone();
             }

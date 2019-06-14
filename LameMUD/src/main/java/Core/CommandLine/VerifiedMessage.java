@@ -1,6 +1,7 @@
 package Core.CommandLine;
 
 import Core.CommandLine.Messaging.MessageSender;
+import Core.CommandLine.Messaging.NoFormatMessage;
 import Core.CommandLine.Platforms.PlatformMessageHeader;
 import Core.CommandLine.User.User;
 
@@ -41,7 +42,8 @@ public class VerifiedMessage {
     {
         if(IsUserLoggedIn())
         {
-            MessageSender.SystemMessageToUser(GetUser(),replyMessage);
+            NoFormatMessage message = new NoFormatMessage(replyMessage);
+            MessageSender.SystemMessageToUser(GetUser(),message);
         }
         else
         {
