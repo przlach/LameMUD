@@ -117,30 +117,6 @@ public class Chatroom extends SmartObject {
         DatabaseAPI database = DatabaseHandler.Get();
         return database.chatrooms().IsUserInUsersArray(GetID(),user.getId());
     }
-    /*
-    public void SendMessage(User sender, String message)
-    {
-        DatabaseAPI database = DatabaseHandler.Get();
-        ArrayList<Integer> usersInChatroom = database.chatrooms().GetUsersArray(GetID());
-        String formattedMessage = "|" + name.GetValue() + "|";
-        if(sender != null)
-        {
-            formattedMessage += "[" + sender.getUsername() +"]";
-        }
-
-        String transformedMessage = MessageModifyExecutor.ModifyChatroomMessage(this,sender,message);
-
-        formattedMessage += " " + transformedMessage;
-        for(int userID: usersInChatroom)
-        {
-            MessageSender.SystemMessageToUser(User.Get(userID),formattedMessage);
-        }
-    }
-    public void SendMessage(String message)
-    {
-        SendMessage(null,message);
-    }
-    */
 
     public LinkedList<User> GetUsers()
     {
