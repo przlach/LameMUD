@@ -30,7 +30,9 @@ public class MessageSender {
 
     public static void SystemMessageToUser(Collection<User> targets, FormattedMessage msg)
     {
-        SystemMessageToUser(targets,msg);
+        for (User target: targets) {
+            SystemMessageToUser(target,msg);
+        }
     }
 
     private static void StashMessage(User target,String msg)
