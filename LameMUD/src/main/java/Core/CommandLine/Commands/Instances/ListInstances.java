@@ -2,6 +2,8 @@ package Core.CommandLine.Commands.Instances;
 
 import Core.CommandLine.Commands.Command;
 import Core.CommandLine.VerifiedMessage;
+import Core.Game.Instance.Instances;
+import Core.Game.Instance.InstancesAPIHandler;
 
 public class ListInstances extends Command {
 
@@ -22,7 +24,16 @@ public class ListInstances extends Command {
     @Override
     public void ExecuteCommand(VerifiedMessage caller) {
 
-        caller.Reply("Chuck testa");
+        String commandResponse = "Instances:" + System.getProperty("line.separator");
+
+        StringBuilder builder = new StringBuilder();
+        for(String s : InstancesAPIHandler.get().getInstancesNames()) {
+            builder.append(s);
+            builder.append(System.getProperty("line.separator"));
+        }
+        commandResponse += builder.toString();
+
+        caller.Reply(commandResponse);
 
     }
 }

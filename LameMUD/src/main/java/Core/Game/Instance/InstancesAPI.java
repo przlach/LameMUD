@@ -8,5 +8,6 @@ public interface InstancesAPI {
     public boolean createInstance(String name);
     public List<Instance> getAllInstances();
     public Instance getInstance(String name);
+    public List<String> getInstancesNames();
 
 }

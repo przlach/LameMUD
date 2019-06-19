@@ -1,5 +1,6 @@
 package Core.Database.Impls.SQL.GameInstances;
 
+/* TODO REMOVE
 import Core.Database.API.DatabaseGameInstances;
 import Core.Game.Instance.Instance;
 
@@ -15,3 +16,5 @@ public class SQLDatabaseInstances implements DatabaseGameInstances {
         return 5;
     }
 }
+
+ */

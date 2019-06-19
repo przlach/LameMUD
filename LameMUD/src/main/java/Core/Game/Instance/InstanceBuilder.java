@@ -3,7 +3,7 @@ package Core.Game.Instance;
 import Core.Database.API.DatabaseAPI;
 import Core.Database.API.DatabaseGameInstances;
 import Core.Database.API.DatabaseHandler;
-
+/* TODO REMOVE
 public class InstanceBuilder {
 
     public InstanceBuilder()
@@ -56,3 +56,5 @@ public class InstanceBuilder {
     private InstanceBuilderError lastError;
 
 }
+
+*/

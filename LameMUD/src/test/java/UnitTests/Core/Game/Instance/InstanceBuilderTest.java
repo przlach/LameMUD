@@ -3,7 +3,7 @@ package UnitTests.Core.Game.Instance;
 import Core.Database.API.DatabaseGameInstances;
 import Core.Database.API.DatabaseHandler;
 import Core.Game.Instance.Instance;
-import Core.Game.Instance.InstanceBuilder;
+//import Core.Game.Instance.InstanceBuilder; TODO REMOVE
 import Core.Game.Instance.InstanceBuilderError;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
+/* TODO REMOVE
 public class InstanceBuilderTest {
 
 
@@ -87,3 +87,5 @@ public class InstanceBuilderTest {
     DatabaseGameInstances database;
 
 }
+
+ */

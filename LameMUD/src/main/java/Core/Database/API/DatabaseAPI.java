@@ -30,6 +30,6 @@ public interface DatabaseAPI {
     public boolean RemoveTrustedPlatformFromUser(PlatformMessageHeader header, String username);
 
     public DatabaseChatrooms chatrooms();
-    public DatabaseGameInstances instances();
+    //public DatabaseGameInstances instances(); TODO remove
 
 }

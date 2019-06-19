@@ -1,6 +1,7 @@
 package IntegrationTests.GameInstances;
 
 import Core.CommandLine.Commands.Chatrooms.ListChatrooms;
+import Core.CommandLine.Commands.Instances.CreateInstance;
 import Core.CommandLine.Commands.Instances.ListInstances;
 import Core.CommandLine.VerifiedMessage;
 import Core.Config.LocalTestServerParameters;

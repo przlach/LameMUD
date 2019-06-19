@@ -1,7 +1,7 @@
 package Core.Database.Impls.SQL;
 
 import Core.Database.API.DatabaseGameInstances;
-import Core.Database.Impls.SQL.GameInstances.SQLDatabaseInstances;
+//import Core.Database.Impls.SQL.GameInstances.SQLDatabaseInstances; TODO REMOVE
 import Core.Params.SmartObject.SmartObject;
 import Core.CommandLine.Platforms.PlatformMessageHeader;
 import Core.Database.API.DatabaseAPI;
@@ -462,11 +462,11 @@ public class MySQLDatabase implements DatabaseAPI {
         return chatrooms;
     }
 
-    @Override
-    public DatabaseGameInstances instances() {
-        return instances;
-    }
+    //@Override TODO REMOVE
+    //public DatabaseGameInstances instances() {
+    //    return instances;
+    //}
 
     DatabaseChatrooms chatrooms = new SQLDatabaseChatroom();
-    DatabaseGameInstances instances = new SQLDatabaseInstances();
+    //DatabaseGameInstances instances = new SQLDatabaseInstances(); TODO REMOVE
 }

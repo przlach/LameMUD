@@ -2,5 +2,10 @@ package Core.Game.Instance;
 
 import org.springframework.data.repository.CrudRepository;
 
-public class InstancesRepository extends CrudRepository<Instance, String> {
+import java.util.List;
+
+public interface InstancesRepository extends CrudRepository<Instance, Integer> {
+
+    List<Instance> findByNameeee(String name);
+
 }

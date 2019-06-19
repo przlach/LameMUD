@@ -10,6 +10,7 @@ public class InstancesCommands {
     {
         ArrayList<Command> commands = new ArrayList<Command>();
         commands.add(new ListInstances());
+        commands.add(new CreateInstance());
 
         return commands;
     }

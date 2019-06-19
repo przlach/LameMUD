@@ -12,7 +12,7 @@ public class MySQLDatabaseInstanceUnitTestStub implements DatabaseAPI {
 
     public MySQLDatabaseInstanceUnitTestStub(DatabaseGameInstances gameInstances)
     {
-        instances = gameInstances;
+        //instances = gameInstances; TODO REMOVE
     }
 
     @Override
@@ -105,10 +105,10 @@ public class MySQLDatabaseInstanceUnitTestStub implements DatabaseAPI {
         return null;
     }
 
-    @Override
-    public DatabaseGameInstances instances() {
-        return instances;
-    }
+//    @Override TODO REMOVE
+//    public DatabaseGameInstances instances() {
+//        return instances;
+//    }
 
-    DatabaseGameInstances instances;
+//    DatabaseGameInstances instances;
 }
