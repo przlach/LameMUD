@@ -8,6 +8,8 @@ import Core.CommandLine.Commands.Other.Help;
 import Core.CommandLine.Commands.Other.SetWelcomeMessage;
 import Core.Database.API.DatabaseHandler;
 import Core.Database.Impls.SQL.MySQLDatabase;
+import Core.Game.Instance.Instances;
+import Core.Game.Instance.InstancesAPIHandler;
 
 public class MainConfig {
 
@@ -41,6 +43,7 @@ public class MainConfig {
     private static void SetDatabase()
     {
         DatabaseHandler.SetDatabaseImpl(new MySQLDatabase());
+        InstancesAPIHandler.set(new Instances()); // TODO move to other appropiate place
     }
 
     private static void SetAvaibleCommands()

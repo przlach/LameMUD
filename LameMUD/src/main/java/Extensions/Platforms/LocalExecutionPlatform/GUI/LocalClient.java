@@ -5,7 +5,6 @@ import Core.CommandLine.Platforms.PlatformMessage;
 import Core.Database.Impls.SQL.Connection.SQLServersCollection;
 import Core.Config.LocalTestServerParameters;
 import Extensions.Platforms.LocalExecutionPlatformHeader;
-import Extensions.Platforms.TempRealDatabaseParameters;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +69,8 @@ public class LocalClient {
             n = Integer.parseInt(args[0]);
         }
 
-        SQLServersCollection.addServer(new TempRealDatabaseParameters());
+        SQLServersCollection.addServer(new LocalTestServerParameters());
+
 
         CreateClients(n);
 
