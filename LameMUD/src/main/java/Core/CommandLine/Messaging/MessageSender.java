@@ -5,12 +5,13 @@ import Core.CommandLine.User.User;
 import Core.Sessions.ActiveUsers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
 public class MessageSender {
 
-    public static void SystemMessageToUser(User target, String msg)
+    private static void SystemMessageToUser(User target, String msg)
     {
         if(ActiveUsers.IsUserActive(target))
         {
@@ -19,6 +20,18 @@ public class MessageSender {
         else
         {
             StashMessage(target,msg);
+        }
+    }
+
+    public static void SystemMessageToUser(User target, FormattedMessage msg)
+    {
+        SystemMessageToUser(target,msg.Get());
+    }
+
+    public static void SystemMessageToUser(Collection<User> targets, FormattedMessage msg)
+    {
+        for (User target: targets) {
+            SystemMessageToUser(target,msg);
         }
     }
 

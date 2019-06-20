@@ -2,8 +2,12 @@ package Core.CommandLine.Commands.Chatrooms;
 
 import Core.CommandLine.Chatroom.Chatroom;
 import Core.CommandLine.Commands.Command;
+import Core.CommandLine.Messaging.ChatroomFormattedMessage;
+import Core.CommandLine.Messaging.MessageSender;
+import Core.CommandLine.User.User;
 import Core.CommandLine.VerifiedMessage;
 
+import java.util.LinkedList;
 import java.util.regex.Matcher;
 
 public class LeaveChatroom extends Command {
@@ -40,7 +44,12 @@ public class LeaveChatroom extends Command {
             if(leavedChatroom.RemoveUser(caller.GetUser()))
             {
                 commandResponse = "<p>You successfully leaved chatroom.</p>";
-                leavedChatroom.SendMessage(caller.GetUser().getUsername() + " leaved chatroom.");
+
+                String messageToChatroom = caller.GetUser().getUsername() + " leaved chatroom.";
+
+                LinkedList<User> targets = leavedChatroom.GetUsers();
+                ChatroomFormattedMessage formattedMsg = new ChatroomFormattedMessage(messageToChatroom,null,leavedChatroom);
+                MessageSender.SystemMessageToUser(targets,formattedMsg);
             }
             else
             {

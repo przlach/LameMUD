@@ -10,6 +10,7 @@ import Core.Database.API.DatabaseAPI;
 import Core.Database.API.DatabaseHandler;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class Chatroom extends SmartObject {
 
@@ -117,27 +118,19 @@ public class Chatroom extends SmartObject {
         return database.chatrooms().IsUserInUsersArray(GetID(),user.getId());
     }
 
-    public void SendMessage(User sender, String message)
+    public LinkedList<User> GetUsers()
     {
+        LinkedList<User> users = new LinkedList<User>();
+
         DatabaseAPI database = DatabaseHandler.Get();
-        ArrayList<Integer> usersInChatroom = database.chatrooms().GetUsersArray(GetID());
-        String formattedMessage = "|" + name.GetValue() + "|";
-        if(sender != null)
+        ArrayList<Integer> chatroomUsrsIds = database.chatrooms().GetUsersArray(this.GetID());
+
+        for(int usrID: chatroomUsrsIds)
         {
-            formattedMessage += "[" + sender.getUsername() +"]";
+            users.add(User.Get(usrID));
         }
 
-        String transformedMessage = MessageModifyExecutor.ModifyChatroomMessage(this,sender,message);
-
-        formattedMessage += " " + transformedMessage;
-        for(int userID: usersInChatroom)
-        {
-            MessageSender.SystemMessageToUser(User.Get(userID),formattedMessage);
-        }
-    }
-    public void SendMessage(String message)
-    {
-        SendMessage(null,message);
+        return users;
     }
 
     public void RemoveEveryUser()
